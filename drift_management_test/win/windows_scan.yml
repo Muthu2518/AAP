@@ -2,8 +2,8 @@
 - name: Windows Server Hardening Scan
   hosts: windows
   gather_facts: true
-  roles:
-    - windows_scan
+  #roles:
+  #  - windows_scan
   tasks:
     - include_role: 
         name: windows_scan
