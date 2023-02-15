@@ -432,7 +432,7 @@
   register: L6
 - name: Confiure dummy variable
   set_fact:
-    dummy: {"0"}
+    dummy: ""
 - name: Check compliance for root PATH Integrity
   set_fact:
     L6_results: "{{ 'Yes' if L6.rc != dummy else 'No' }}"
