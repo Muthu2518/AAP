@@ -814,26 +814,8 @@
     path: "{{ hardening_requirements.windows_hardening.system_services_disabled.windows_audio.path }}"
     name: "{{ hardening_requirements.windows_hardening.system_services_disabled.windows_audio.name }}"
   register: windows_audio
-- name: Check compliance for 'System Services o' section
-  set_fact:
-    windows_audio_endpoint_builder_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.windows_audio_endpoint_builder.raw_value | int == windows_audio_endpoint_builder.value | int else 'No' }}"
-    windows_error_reporting_service_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.windows_error_reporting_service.raw_value | int == windows_error_reporting_service.value | int else 'No' }}"
-    application_layer_gateway_service_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.application_layer_gateway_service.raw_value | int == application_layer_gateway_service.value | int else 'No' }}"
-    application_management_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.application_management.raw_value | int == application_management.value | int else 'No' }}"
-    human_interface_device_access_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.human_interface_device_access.raw_value | int == human_interface_device_access.value | int else 'No' }}"
-    print_spooler_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.print_spooler.raw_value | int == print_spooler.value | int else 'No' }}"
-    remote_access_auto_connection_manager_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.remote_access_auto_connection_manager.raw_value | int == remote_access_auto_connection_manager.value | int else 'No' }}"
-    remote_access_connection_manager_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.remote_access_connection_manager.raw_value | int == remote_access_connection_manager.value | int else 'No' }}"
-    resultant_set_of_policy_provider_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.resultant_set_of_policy_provider.raw_value | int == resultant_set_of_policy_provider.value | int else 'No' }}"
-    routing_and_remote_access_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.routing_and_remote_access.raw_value | int == routing_and_remote_access.value | int else 'No' }}"
-    shell_hardware_detection_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.shell_hardware_detection.raw_value | int == shell_hardware_detection.value | int else 'No' }}"
-    smart_card_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.smart_card.value | int == smart_card.value | int else 'No' }}"
-    special_administration_console_helper_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.special_administration_console_helper.raw_value | int == special_administration_console_helper.value | int else 'No' }}"
-    telephony_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.telephony.raw_value | int == telephony.value | int else 'No' }}"
-    themes_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.themes.raw_value | int == themes.value | int else 'No' }}"
-    windows_audio_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.windows_audio.raw_value | int == windows_audio.value | int else 'No' }}"  
-  ignore_errors: yes 
-  tasks:
+
+ tasks:
     - name: converting to html
       template:
         src: ./report.html.j2
