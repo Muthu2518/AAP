@@ -814,14 +814,15 @@
     path: "{{ hardening_requirements.windows_hardening.system_services_disabled.windows_audio.path }}"
     name: "{{ hardening_requirements.windows_hardening.system_services_disabled.windows_audio.name }}"
   register: windows_audio
-
-tasks:
- - name: converting to html
-   template:
-      src: ./report.html.j2
-      dest: /opt/{{ ansible_facts['hostname'] }}.html
-    delegate_to: localhost
- - name: Copying report to target machine
-   copy:
-     src: /opt/{{ ansible_facts['hostname'] }}.html
-     dest: \\192.168.1.116\tmp
+  
+- name: converting to html
+  tasks:
+    - name: test
+      template:
+        src: ./report.html.j2
+        dest: /opt/{{ ansible_facts['hostname'] }}.html
+      delegate_to: localhost
+    - name: Copying report to target machine
+      copy:
+        src: /opt/{{ ansible_facts['hostname'] }}.html
+        dest: \\192.168.1.116\tmp
