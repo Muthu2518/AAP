@@ -837,12 +837,11 @@
   ignore_errors: yes 
 
 - name: converting to html
-   template:
-     src: ./report.html.j2
-     dest: /opt/{{ ansible_facts['hostname'] }}.html
-   delegate_to: localhost
-   run_once: true
+    template:
+      src: ./report.html.j2
+      dest: /opt/{{ ansible_facts['hostname'] }}.html
+    delegate_to: localhost
 - name: Copying report to target machine
     copy:
-     src: /opt/{{ ansible_facts['hostname'] }}.html
+      src: /opt/{{ ansible_facts['hostname'] }}.html
       dest: \\192.168.1.116\tmp
