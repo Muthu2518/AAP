@@ -5,7 +5,8 @@
   roles:
     - windows_scan
   tasks:
-    - include_role: windows_scan
+    - include_role: 
+        name: windows_scan
       loop : "{{ groups.windows }}"
 
 #  tasks:
