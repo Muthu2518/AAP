@@ -815,7 +815,7 @@
     name: "{{ hardening_requirements.windows_hardening.system_services_disabled.windows_audio.name }}"
   register: windows_audio
 
- tasks:
+tasks:
  - name: converting to html
    template:
       src: ./report.html.j2
