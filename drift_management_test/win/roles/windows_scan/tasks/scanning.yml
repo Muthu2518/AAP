@@ -2,5 +2,16 @@
 - name: Perform scanning on 'Password' section
   include_tasks: password_section.yml
  # when: "'yes' in user_select"
-
+- name: converting to html
+    template:
+      src: ./report.html.j2
+      dest: /opt/{{ ansible_facts['hostname'] }}.html
+       # loop: "{{ range(0, csv_files_located.files | length) | list }}"
+       # when: csv_files_located.files | length | int > 0
+    delegate_to: localhost
+    run_once: true
+- name: Copying report to target machine
+    copy:
+      src: /opt/{{ ansible_facts['hostname'] }}.html
+      dest: \\192.168.1.116\tmp
 
