@@ -428,7 +428,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-5 Ensure root is the only UID 0 account' }},{{ L4_results }} >> {{ host_csv_file }}"
 
 - name: Ensure root PATH Integrity
-  script: "../RHEL/roles/rhel_scan/files/L6.sh"
+  script: "../rhel/roles/rhel_scan/files/L6.sh"
   register: L6
 - name: Confiure dummy variable
   set_fact:
@@ -441,7 +441,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-6 Ensure root PATH Integrity' }},{{ L6_results }} >> {{ host_csv_file }}"
   
 - name: Ensure all users home directories exist
-  script: "../RHEL/roles/rhel_scan/files/L7.sh"
+  script: "../rhel/roles/rhel_scan/files/L7.sh"
   register: L7
   ignore_errors: yes
 - name: Check compliance for users home directories exist
@@ -455,7 +455,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-8 Ensure users home directories permissions are 750 or more restrictive' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
 
 - name: Ensure users own their home directories
-  script: "../RHEL/roles/rhel_scan/files/L9.sh"
+  script: "../rhel/roles/rhel_scan/files/L9.sh"
   register: L9
   ignore_errors: yes
 - name: Check compliance for users own their home directories
@@ -466,7 +466,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-9 Ensure users own their home directories' }},{{ L9_results }} >> {{ host_csv_file }}"
   
 - name: Ensure users dot files are not group or world writable
-  script: "../RHEL/roles/rhel_scan/files/L10.sh"
+  script: "../rhel/roles/rhel_scan/files/L10.sh"
   register: L10
   ignore_errors: yes
 - name: Check compliance for users dot files are not group or world writable
@@ -477,7 +477,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L10- Ensure users dot files are not group or world writable' }},{{ L10_results }} >> {{ host_csv_file }}"
   
 - name: Ensure no users have .forward files
-  script: "../RHEL/roles/rhel_scan/files/L11.sh"
+  script: "../rhel/roles/rhel_scan/files/L11.sh"
   register: L11
   ignore_errors: yes
 - name: Check compliance for no users have .forward files
@@ -488,7 +488,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L11- Ensure  no users have .forward files' }},{{ L11_results }} >> {{ host_csv_file }}"
   
 - name: Ensure no users have .netrc files
-  script: "../RHEL/roles/rhel_scan/files/L12.sh"
+  script: "../rhel/roles/rhel_scan/files/L12.sh"
   register: L12
   ignore_errors: yes
 - name: Check compliance for no users have .netrc files
@@ -499,7 +499,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L12- Ensure no users have .netrc files' }},{{ L12_results }} >> {{ host_csv_file }}"
 
 - name: Ensure users .netrc Files are not group or world accessible
-  script: "../RHEL/roles/rhel_scan/files/L13.sh"
+  script: "../rhel/roles/rhel_scan/files/L13.sh"
   register: L13
   ignore_errors: yes
 - name: Check compliance for users .netrc Files are not group or world accessible
@@ -510,7 +510,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L13- Ensure users .netrc Files are not group or world accessible' }},{{ L13_results }} >> {{ host_csv_file }}"
 
 - name: Ensure no users have .rhosts files
-  script: "../RHEL/roles/rhel_scan/files/L14.sh"
+  script: "../rhel/roles/rhel_scan/files/L14.sh"
   register: L14
   ignore_errors: yes
 - name: Check compliance for no users have .rhosts files
@@ -521,7 +521,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L14- Ensure no users have .rhosts files' }},{{ L14_results }} >> {{ host_csv_file }}"
   
 - name: Ensure all groups in /etc/passwd exist in /etc/group
-  script: "../RHEL/roles/rhel_scan/files/L15.sh"
+  script: "../rhel/roles/rhel_scan/files/L15.sh"
   register: L15
   ignore_errors: yes
 - name: Check compliance for all groups in /etc/passwd exist in /etc/group
@@ -532,7 +532,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L15- Ensure all groups in /etc/passwd exist in /etc/group' }},{{ L15_results }} >> {{ host_csv_file }}"
   
 - name: Ensure no duplicate UIDs exist
-  script: "../RHEL/roles/rhel_scan/files/L16.sh"
+  script: "../rhel/roles/rhel_scan/files/L16.sh"
   register: L16
   ignore_errors: yes
 - name: Check compliance for no duplicate UIDs exist
@@ -543,7 +543,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L16- Ensure no duplicate UIDs exist' }},{{ L16_results }} >> {{ host_csv_file }}"  
   
 - name: Ensure no duplicate GIDs exist
-  script: "../RHEL/roles/rhel_scan/files/L17.sh"
+  script: "../rhel/roles/rhel_scan/files/L17.sh"
   register: L17
   ignore_errors: yes
 - name: Check compliance for no duplicate GIDs exist
@@ -554,7 +554,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L17- Ensure no duplicate GIDs exist' }},{{ L17_results }} >> {{ host_csv_file }}"
   
 - name: Ensure no duplicate user names exist
-  script: "../RHEL/roles/rhel_scan/files/L18.sh"
+  script: "../rhel/roles/rhel_scan/files/L18.sh"
   register: L18
   ignore_errors: yes
 - name: Check compliance for no duplicate user names exist
@@ -565,7 +565,7 @@
   shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L18- Ensure no duplicate user names exist' }},{{ L18_results }} >> {{ host_csv_file }}"
 
 - name: Ensure no duplicate group names exist
-  script: "../RHEL/roles/rhel_scan/files/L19.sh"
+  script: "../rhel/roles/rhel_scan/files/L19.sh"
   register: L19
   ignore_errors: yes
 - name: Check compliance for no duplicate group names exist
