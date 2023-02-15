@@ -1,0 +1,5 @@
+---
+ansible_user: root
+ansible_password: 1234567aA
+ansible_sudo_pass: 1234567aA
+ansible_python_interpreter: /usr/libexec/platform-python

@@ -1,0 +1,167 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Name of the schedule..!
+      debug:
+        msg: "{{ schedule }}"
+        
+    - name: Adding target hosts to dynamic inventory group
+      add_host:
+        name: "{{ item }}"
+        group: "windows"
+      with_items: "{{ managed_vm.split(', ') }}"
+
+- hosts: windows
+  vars_files:
+    - ./vars/variables.yml
+  
+  tasks:
+    - name: Checking the connections with target servers
+      win_ping:
+      
+    - block:
+        - name: Creating folder to store hotfix files on target machine
+          win_file:
+            path: "C:\\Patches"
+            state: directory
+            
+        - name: Creating folder to store cab files
+          win_file:
+            path: "C:\\Patches\\cab_files"
+            state: directory
+            
+        - name: Copying batch script to target server
+          win_copy:
+            src: ./fetch_file.bat
+            dest: C:\Users\Administrator\Desktop\
+
+        - name: Running batch script file to fetch patch file from shared folder and copying it to target server
+          ansible.windows.win_command:  C:\Users\Administrator\Desktop\fetch_file.bat
+          args:
+            stdin: "{{ item }}"
+          register: patch_output
+          with_items: "{{ patches.split(', ') }}"
+
+        - name: Status of batch script run..!
+          debug:
+            msg: "{{ patch_output }}"
+
+        - name: Finding the hotfix file in target machine to install
+          win_find:
+            paths: C:\Patches
+            file_type: file
+            patterns: '*{{ item }}*.msu'
+          register: result007
+          with_items: "{{ patches.split(', ') }}"
+          
+        - name: Status of hotfix..!
+          debug:
+            msg: "{{ result007.results | map(attribute='files') | flatten | map(attribute='path') | flatten }}"
+          register: status_output
+      
+        - name: output
+          debug:
+            msg: "{{ item }}"
+          with_items: "{{ status_output.msg }}"
+
+        - name: unpack the hotfix if needed
+          raw: expand -f:* "{{ item }}" C:\Patches\cab_files
+          register: result001
+          with_items: "{{ status_output.msg }}"
+          
+        - name: Finding the cab file in target machine to install
+          win_find:
+            paths: C:\Patches\cab_files
+            file_type: file
+            patterns: '*{{ item }}*.cab'
+          register: cab_file
+          with_items: "{{ patches.split(', ') }}"
+            
+        - name: Status of cab file..!
+          debug:
+            msg: "{{ cab_file.results | map(attribute='files') | flatten | map(attribute='path') | flatten }}"
+          register: cabinet_output
+      
+        - name: output
+          debug:
+            msg: "{{ item }}"
+          with_items: "{{ cabinet_output.msg }}"
+
+        - name: using dism to install the cab containing the hotfix
+          raw: 'dism.exe /online /add-package /quiet /PackagePath:"{{ item }}"'
+          register: dism_output
+          changed_when: "true"
+          failed_when: "dism_output.rc != 0 and dism_output.rc != 1"
+          with_items: "{{ cabinet_output.msg }}"
+            
+        - debug: var=dism_output
+
+        #- name: Reboot machine
+          #win_reboot:
+          #when: dism_output.reboot_required
+        
+- hosts: localhost
+  vars:
+    app_ip: 192.168.1.18
+    user_id: 1
+    job_template_id: 42
+    
+  tasks:
+    - name: retrieve the AAP Token
+      uri:
+        url: https://{{ app_ip }}/api/v2/users/{{ user_id }}/personal_tokens/
+        user: admin
+        password: 1234567aA
+        method: POST
+        force_basic_auth: yes
+        headers:
+          Content-Type: application/json
+        return_content: yes
+        validate_certs: no
+        status_code: [200, 201]
+        body_format: json
+        body:
+          extra_vars:
+            description: "Tower CLI"
+            application: null
+            scope: write
+      register: result
+      
+    - set_fact:
+        token: "{{ result['json']['token'] }}"
+        
+    - name: Collect all schedules' info
+      uri:
+        url: https://{{ app_ip }}/api/v2/schedules/
+        method: GET
+        headers:
+          Authorization: "Bearer {{ token }}"
+        return_content: yes
+        validate_certs: no
+        status_code: [200, 201]
+        body_format: json
+      register: result
+
+    - name: Extract schedule ID
+      register: result_01
+      args:
+        stdin: |
+          for schedule in {{ result.json.results }}:
+            if schedule['name'] == "{{ schedule }}":
+              print(schedule['id'])
+      command: /usr/bin/python3
+
+    - name: Delete used schedule
+      uri:
+        url: https://{{ app_ip }}/api/v2/schedules/{{ result_01.stdout }}/
+        method: DELETE
+        headers:
+          Authorization: "Bearer {{ token }}"
+        return_content: yes
+        validate_certs: no
+        status_code: [200, 201, 204]
+        body_format: json
+        body:
+          extra_vars:
+            id: "{{ result_01.stdout }}"
+      register: result

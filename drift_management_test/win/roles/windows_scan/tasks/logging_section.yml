@@ -1,0 +1,22 @@
+---
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    maximum_applicationlog_size: "{{ lookup('ini', 'MaximumApplicationSize section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+    maximum_securitylog_size: "{{ lookup('ini', 'MaximumSecuritySize section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+    maximum_systemlog_size: "{{ lookup('ini', 'MaximumSystemSize section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+
+- name: Check compliance for 'Logging' section
+  set_fact:
+    maximum_applicationlog_size_results: "{{ 'success' if hardening_requirements.windows_hardening.logging_section.maximum_applicationlog_size.value | int == maximum_applicationlog_size | int else 'fail' }}"
+    maximum_securitylog_size_results: "{{ 'success' if hardening_requirements.windows_hardening.logging_section.maximum_securitylog_size.value | int == maximum_securitylog_size | int else 'fail' }}"
+    maximum_systemlog_size_results: "{{ 'success' if hardening_requirements.windows_hardening.logging_section.maximum_systemlog_size.value | int == maximum_systemlog_size | int else 'fail' }}"
+
+- name: Inset entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},'Logging',{{ item[0] }},{{ item[1] }},{{ item[2] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['MaximumApplicationSize', "{{ hardening_requirements.windows_hardening.logging_section.maximum_applicationlog_size.value }}", "{{ maximum_applicationlog_size }}", "{{ maximum_applicationlog_size_results }}"]
+    - ['MaximumSecuritySize', "{{ hardening_requirements.windows_hardening.logging_section.maximum_securitylog_size.value }}", "{{ maximum_securitylog_size }}", "{{ maximum_securitylog_size_results }}"]
+    - ['MaximumSystemSize', "{{ hardening_requirements.windows_hardening.logging_section.maximum_systemlog_size.value }}", "{{ maximum_systemlog_size }}", "{{ maximum_systemlog_size_results }}"]
+  delegate_to: localhost
+  
+

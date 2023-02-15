@@ -1,0 +1,87 @@
+---
+- name: Provisioning Windows VM
+  hosts: localhost
+  gather_facts: false
+
+  vars_prompt:
+    - name: vm_name
+      prompt: Enter the windows VM name
+      private: no
+      
+  tasks:
+    - name: include vars
+      include_vars:
+        dir: group_vars
+
+    - name: Clone a virtual machine from Windows template and customize
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter_server }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: False
+        datacenter: "{{ datacenter_name }}"
+        cluster: "{{ cluster_name }}"
+        name: "{{ vm_name }}"
+        datastore: "{{ datastore }}"
+        folder: '/{{ datacenter_name }}/vm/CTC_RWS_ANSIBLE'
+        template: "{{ win_template }}"
+        state: poweredon
+        wait_for_ip_address: yes
+        disk:
+        - size_gb: 40
+          type: thin
+        - size_gb: 5
+          type: thin
+        networks:
+        - name: "{{ network }}"
+          type: dhcp
+        wait_for_customization: yes
+        customization:
+          autologon: yes
+          autologoncount: 1
+          timezone: 20
+          hwclockUTC: yes
+          password:  "{{ password }}"
+      delegate_to: localhost
+      register: vm_info_win
+   #- pause: seconds=60
+   
+    - name: IP-Address of the launched VM
+      debug:
+        msg: 'The IP of VM is {{ vm_info_win.instance.ipv4 }}'
+
+    - name: Adding host to dynamic inventory group
+      add_host:
+        hostname: '{{ vm_info_win.instance.ipv4 }}'
+        groups: win
+
+- hosts: win
+  vars:
+    - ansible_user: administrator
+    - ansible_connection: winrm
+    - ansible_password: 123456aA
+    - ansible_port: 5986
+    - ansible_winrm_transport: ntlm
+    - ansible_winrm_server_cert_validation: ignore
+    - ansible_winrm_kerberos_credential_delegation: yes
+    
+  tasks:
+    - name:  Ansible to windows server connection test
+      ansible.windows.win_ping:
+
+    - name: Initialzing the disk
+      community.windows.win_initialize_disk:
+        disk_number: 1
+
+    - name: Create a partition with drive letter E
+      community.windows.win_partition:
+        drive_letter: E
+        partition_size: -1
+        disk_number: 1
+
+    - name: Full formatted drive letter E
+      community.windows.win_format:
+        drive_letter: E
+        file_system: NTFS
+        new_label: E Drive
+        full: True

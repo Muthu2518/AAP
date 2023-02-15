@@ -1,0 +1,18 @@
+---
+- hosts: windows
+  tasks:
+    - name: Copying
+      win_copy:
+        src: C:\tmp\testing.html
+        #dest: C:\Test\
+        dest: \\192.168.1.116\tmp\xyz.html
+        remote_src: true
+      become: True
+      become_method: runas
+      become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+      vars:
+        ansible_become_user: administrator
+        ansible_become_pass: 123456aA
+
+
+

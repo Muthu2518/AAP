@@ -1,0 +1,103 @@
+---
+- name: Windows Server Hardening Scan
+  hosts: windows
+  gather_facts: true
+  vars:
+    headers: Hostname,IPAddress,Date,Baseline,Results
+  roles:
+    - windows_scan
+
+  tasks:
+  - name: Get the audit files and email to administrator
+    block:
+      - name: Find .csv audit files
+        find:
+          paths: /tmp/
+          patterns: '*.csv'
+        register: csv_files_located
+
+      - name: Find all .ini and .csv audit files
+        find:
+          paths: /tmp/
+          patterns: '*.csv,*.ini'
+        register: csv_ini_files_located
+
+      - name: Initialize an empty list for audit files
+        set_fact:
+          csv_audit_file_list: []
+          csv_ini_audit_file_list: []
+
+      - name: Append to list of csv audit files
+        set_fact:
+          csv_audit_file_list: "{{ csv_audit_file_list + [csv_files_located.files[item].path] }}"
+        loop: "{{ range(0, csv_files_located.files | length) | list }}"
+        when: csv_files_located.files | length | int > 0
+
+      - name: Append to list of csv and ini audit files
+        set_fact:
+          csv_ini_audit_file_list: "{{ csv_ini_audit_file_list + [csv_ini_files_located.files[item].path] }}"
+        loop: "{{ range(0, csv_ini_files_located.files | length) | list }}"
+        when: csv_ini_files_located.files | length | int > 0
+
+      #- name: reading the csv files
+        #read_csv:
+          #path: "{{ csv_files_located.files[item].path }}"
+        #register: noncomplaint
+        #loop: "{{ range(0, csv_files_located.files | length) | list }}"
+        #when: csv_files_located.files | length | int > 0
+        
+      #- debug:
+          #msg: "{{ item.IPAddress }}"
+        #loop: "{{ noncomplaint.results[0].list }}"
+        #when: item.Results == "No"
+        #register: check
+        
+      #- debug: msg={{ check.results | map(attribute='item') | selectattr("Results", "equalto", "No") | map(attribute='IPAddress') | unique }}
+        #register: noncompliant_targetmachines 
+
+    delegate_to: localhost
+    run_once: true
+  
+  - name: Copying report to target machine
+    copy:
+      src: "{{ csv_files_located.files[item].path }}"
+      dest: \opt
+      #become: True
+    loop: "{{ range(0, csv_files_located.files | length) | list }}"
+    when: csv_files_located.files | length | int > 0
+    ignore_errors: true
+  
+  - name: Copying report to target machine
+    copy:
+      src: "{{ csv_files_located.files[item].path }}"
+      dest: \\192.168.1.116\tmp
+      #become: True
+    loop: "{{ range(0, csv_files_located.files | length) | list }}"
+    when: csv_files_located.files | length | int > 0
+    ignore_errors: true
+    
+  #- name: reading the csv files
+  #  read_csv:
+  #    path: \\192.168.1.116\tmp\{{ inventory_hostname }}.csv
+  #    delimiter: ','
+  #  register: csv_file
+  #  run_once: true
+  - name: Ansible_facts
+    debug:
+      var: ansible_facts
+    
+  - name: converting to html
+    template:
+      src: ./report.html.j2
+      dest: /opt/{{ ansible_facts['hostname'] }}.html
+       # loop: "{{ range(0, csv_files_located.files | length) | list }}"
+       # when: csv_files_located.files | length | int > 0
+    delegate_to: localhost
+    run_once: true
+  - name: Copying report to target machine
+    copy:
+      src: /opt/{{ ansible_facts['hostname'] }}.html
+      dest: \\192.168.1.116\tmp
+        
+
+

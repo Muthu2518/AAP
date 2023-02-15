@@ -1,0 +1,73 @@
+---
+- hosts: windows
+  tasks:
+
+    - name: Checking the connections with target servers
+      win_ping:
+
+    - block:
+        - name: Check if '{{ hotfix }}' hotfix has been applied
+          raw: Get-Hotfix -Id "{{ hotfix }}"
+          register: hotfix_status
+          failed_when: false
+          changed_when: false
+
+        - name: Checking whether the hotfix is present or need to  install
+          debug:
+            var: hotfix_status
+
+    - block:
+        - name: Creating folder to store hotfix files on target machine
+          win_file:
+            path: "C:\\Patches"
+            state: directory
+
+        - name: Copying batch script to target server
+          win_copy:
+            src: ./fetch_file.bat
+            dest: C:\Users\Administrator\Desktop\
+
+        - name: Running batch script file to fetch patch file from shared folder and copying it to target server
+          ansible.windows.win_command:  C:\Users\Administrator\Desktop\fetch_file.bat
+          args:
+            stdin: "{{ hotfix }}"
+          register: patch_output
+
+        - name: Status of batch script run..!
+          debug:
+            msg: "{{ patch_output  }}"
+            
+        - name: Removing the batch file...!
+          win_file:
+            path: C:\Users\Administrator\Desktop\fetch_file.bat
+            state: absent
+
+        - name: Finding the hotfix file in target machine to install
+          win_find:
+            paths: C:\Patches
+            file_type: file
+            patterns: '*{{ hotfix }}*.msu'
+          register: result
+
+        - name: Found the file..!
+          debug:
+            msg: "{{ result.files[0].filename }}"
+
+        - name: Installing hotfix..! validating KB
+          community.windows.win_hotfix:
+            hotfix_kb: "{{ hotfix }}"
+            source: "{{ result.files[0].path }}"
+            state: present
+          register: hotfix_install
+
+        - name: Reboot machine if required
+          ansible.windows.win_reboot:
+          when: hotfix_install.reboot_required
+          
+        - name: copying output to output.txt file
+          copy:
+            content: "{{ hotfix_install  }}"
+            dest: /tmp/output.txt
+          delegate_to: localhost
+      
+      when: "hotfix_status.rc == 1"

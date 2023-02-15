@@ -1,0 +1,55 @@
+---
+- name: Perform Baseline Remediation
+  hosts: rhel
+  become: yes
+  gather_facts: yes
+
+  tasks:
+  - name: RHEL Baseline Remediation
+    include_role:
+      name: "rhel_remediation"
+      
+  - name: Find audit files
+    find:
+      paths: "{{ audit_files_directory }}"
+      patterns: "^{{ inventory_hostname + '-' }}*"
+      use_regex: yes
+    register: files_located
+  
+  - name: Initialize an empty list for audit files
+    set_fact:
+      audit_file_list: []
+  
+  - name: Append to list of audit files
+    set_fact:
+      audit_file_list: "{{ audit_file_list + [files_located.files[item].path] }}"
+    loop: "{{ range(0, files_located.files | length) | list }}"
+    when: files_located.files | length | int > 0
+    register: testing
+      
+  - name: reading the csv files
+    read_csv:
+      path: "{{ files_located.files[item].path }}"
+    register: failure
+    loop: "{{ range(0, files_located.files | length) | list }}"
+    when: files_located.files | length | int > 0
+
+#---
+#- name: Perform Baseline Remediation
+   #hosts: localhost
+  #tasks:
+    #- name: Adding non complaint hosts to dynamic inventory group
+      #add_host:
+        #name: "{{ item }}"
+        #group: "rhel_noncomplaint_vms"
+      #with_items: "{{ noncomplaint_vms.split(', ') }}"
+
+#- hosts: rhel_noncomplaint_vms
+  #vars_files:
+    #- ./vars/variables.yml
+  #gather_facts: true
+
+  #tasks:
+  #- name: RHEL Baseline Remediation
+    #include_role:
+      #name: "rhel_remediation"

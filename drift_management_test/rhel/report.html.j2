@@ -1,0 +1,1221 @@
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<table style="border: 1px solid black; border-collapse: collapse;">
+        <col class="col0">
+        <col class="col1">
+        <tbody>
+          <tr class="row0">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Hostname	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px; length: 100%;">{{ ansible_facts['hostname'] }}</td>
+          </tr>
+          <tr class="row1">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">IP Address	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_facts['hostname'] }}</td>
+         </tr>
+          <tr class="row2">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;""> Date </td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_date_time.date }}</td>
+         </tr>
+          <tr class="row3">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">OS Version	& Build Version</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_facts['distribution']  }} & {{ ansible_facts['distribution_version']  }}</td>
+         </tr>
+          <tr class="row4">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Server Role	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+          </tr>
+        </tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table style="border: 1px solid black; border-collapse: collapse;">
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION A</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Seal and store built-in local root account in PAPM system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable or remove all unnecessary accounts from the system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure system accounts are non-login</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure default group for the root account is GID 0</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure default user umask is 027 or more restrictive</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure default user shell timeout is 900 seconds or less</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure access to the su command is restricted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION B</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Prompt user to change password in 14 days</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set enforce password history to 5</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set max password age to 90 day</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set min password age to 7 days</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set min password length to 8 chars</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set meet complexity requirement contain chars of at least 3 of groups</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ A6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure all users last password change date is in the past</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure password hashing algorithm is SHA-512</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION C</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set lockout duration to 30 minutes</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ C1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set lockout threshold to 5 invalid attempts</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set reset lockout counter to 30 minutes</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION D</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/passwd are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/shadow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/group are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/gshadow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/passwd are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/shadow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D9_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/group- are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D10_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/gshadow- are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D11_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no world writable files exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D12_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no unowned files or directories exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D13_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no ungrouped files or directories exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ D14_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION E</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-cramps</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-freevxfs</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-jffs2</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-hfs</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-hfsplus</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration-squashfs</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration udf</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">File System Configuration vfat</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure systemd is mounting /tmp</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nodev option set on /tmp partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nosuid option set on /tmp partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nodev option set on /dev/shm partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nodev option set on /dev/shm partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nosuid option set on /dev/shm partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure noexec option set on /dev/shm partition</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nodev option set on removable media partitions</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure nosuid option set on removable media partitions</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure noexec option set on removable media partitions</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure sticky bit is set on all world-writable directories</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ E19_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable Automounting</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ E20_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure AIDE is installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure filesystem integrity is regularly checked</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ E22_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION F</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring ipv4 forwarding is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring packet redirect sending is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring source routed packets are not accepted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring ICMP redirects are not accepted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring secure ICMP redirects are not accepted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring suspicious packets are logged</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring broadcast ICMP requests are ignored</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring bogus ICMP requests are ignored</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring reverse path filtering is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring TCP SYN cookies are enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring IPv6 router advertisements are not accepted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring IPv6 redirects are not accepted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure IPv6 is Disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure TCP Wrappers is installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure /etc/hosts.allow is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure /etc/hosts.deny is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/hosts.allow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ F17_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/hosts.allow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ F18_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disabling uncommon network protocols</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disabling SCTP protocol</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disabling RDS protocol</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure /etc/hosts.deny is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure iptables is installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure default deny firewall policy</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ F24_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure loopback traffic is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure outbound and established connections are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/hosts.allow are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ F27_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure wireless interfaces are disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION G</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure time synchronization is in use</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure ntp is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION H</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring core dumps are restricted</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure XD/NX support is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring address space layout randomization is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring prelink is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION I</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring grub does not have selinux disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring SELinux state is enforcing</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring selinux policy is configured correctly</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring mcstrans is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no unconfined daemons exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Checking to ensure that selinux is installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION J</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring crond service is started logging</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/crontab are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/cron.hourly are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/cron.daily are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/cron.weekly are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/cron.monthly are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/cron.d are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure at/cron is restricted to authorized users</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ J8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION K</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/ssh/sshd_config  are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ K1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH Protocol is set to 2</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH LogLevel is set to INFO</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH X11 forwarding is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH MaxAuthTries is set to 4 or less</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH IgnoreRhosts is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH HostbasedAuthentication is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH root login is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH PermitEmptyPasswords is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH PermitUserEnvironment is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure only approved MAC algorithms are used</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH Idle Timeout Interval is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH LoginGraceTime is set to one minute or less</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH access is limited</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION L</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure password fields are not empty</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no legacy + entries exist in /etc/passwd</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no legacy + entries exist in /etc/shadow</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no legacy + entries exist in /etc/group</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure root is the only UID 0 account</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure root PATH Integrity</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure all users home directories exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure users home directories permissions are 750 or more restrictive</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure users own their home directories</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L9_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure users dot files are not group or world writable</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L10_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure  no users have .forward files</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L11_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no users have .netrc files</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L12_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure users .netrc Files are not group or world accessible</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L13_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no users have .rhosts files</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L14_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure all groups in /etc/passwd exist in /etc/group</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L15_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no duplicate UIDs exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L16_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no duplicate GIDs exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L17_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no duplicate user names exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L18_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure no duplicate group names exist</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ L19_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION M</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring /etc/motd has the relevant policy message</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring /etc/issue has the relevant policy message</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring /etc/issue.net has the relevant policy message</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/motd are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/issue are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/issue.net are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on /etc/issue.net are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure SSH warning banner is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ M8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION N</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Install antivirus software and run automatically in the background</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ N1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION O</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure chargen services are not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure daytime services are not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure discard services are not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure echo services are not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure time services are not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure tftp server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure xinetd is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure X Window System is not installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring avahi-daemon itself is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O9_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring CUPS is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O10_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring dhpcd itself is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O11_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that LDAP itself is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O12_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that NFS and RPC itself are disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O13_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring DNS server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O14_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that FTP is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O15_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure HTTP server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O16_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure IMAP and POP3 server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O17_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that samba is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O18_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure HTTP Proxy Server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O19_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure mail transfer agent is configured for local-only mode</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O20_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure NIS Server is not enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O21_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that rsh and its subservices are completely disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O22_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that telnet.socket service is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O23_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that tftp.socket service different from xinetd tftp is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O24_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that rsyncd service is disabled if present</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O25_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure talk server is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O26_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring ypbind NIS client is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O27_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring rsh client is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O28_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure talk client is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O29_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure telnet client is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O30_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure ldap client is disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ O31_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION P</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure audit log storage size is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring auditd service is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring that services that start before auditd starts are also audited</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring events that modify date and time are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P4_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring events that modify user/group information are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P5_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring events that modify network environment are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P6_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring events that modify the Mandatory Access Control selinux of the system are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P7_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring login and logout events are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P8_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring session initiation information is collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P9_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring disc acl permission modification events are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P10_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring unsuccessful unauthorized file access events are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P11_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure use of privileged commands is collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P12_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring mount events are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P13_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring file deletion events by users are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P14_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring changes to sudoers are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P15_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring sysadmin actions sudolog are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P16_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring kernel module loading and unloading events are collected</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P17_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring audit configuration is immutable</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P18_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure rsyslog Service is enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P19_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure logging is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P20_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensuring correct rsyslog permissions are set</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P21_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure rsyslog is configured to send logs to a remote log host</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P22_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure remote rsyslog messages are only accepted on designated log hosts</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P23_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure rsyslog or syslog-ng is installed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P24_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on all logfiles are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P25_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">P-26 Ensure logrotate is configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ P26_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">SECTION Q</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure permissions on bootloader config are configured</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ Q1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure bootloader password is set</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ Q2_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure authentication required for single user mode</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ Q3_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+</table>

@@ -1,0 +1,469 @@
+---
+#- name: Hiding Last Logged On Username in the Logon Dialog
+#  win_regedit:
+#    path: "{{ hardening_requirements.windows_hardening.registry_fixes_section.dont_display_last_user_name.path }}"
+#    name: "{{ hardening_requirements.windows_hardening.registry_fixes_section.dont_display_last_user_name.name }}"
+#    data: "{{ hardening_requirements.windows_hardening.registry_fixes_section.dont_display_last_user_name.value }}"
+#    type: "{{ hardening_requirements.windows_hardening.registry_fixes_section.dont_display_last_user_name.type }}"
+
+#- name: Enable Password Protected Screen Saver
+#  win_regedit:
+#    path: "{{ hardening_requirements.windows_hardening.registry_fixes_section.screen_saver_is_secure.path }}"
+#    name: "{{ hardening_requirements.windows_hardening.registry_fixes_section.screen_saver_is_secure.name }}"
+#    data: "{{ hardening_requirements.windows_hardening.registry_fixes_section.screen_saver_is_secure.value }}"
+#    type: "{{ hardening_requirements.windows_hardening.registry_fixes_section.screen_saver_is_secure.type }}"
+
+#- name: Change the owner for a part of the registry
+#    tags: setacl
+#    raw: setacl.exe -on "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum" -ot reg -rec yes -actn setowner -ownr "n:Administrator"
+#- name: Add administrator to reg
+#    tags: setacl
+#    raw: setacl.exe -on "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Enum" -ot reg -rec yes -actn ace -ace "n:Adminiistrator;p:full"
+      
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\gpsvc'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'CrashDumpEnabled'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl'
+    data: 0
+    type: 'dword'
+  
+- name: Test
+  win_regedit: 
+    name: 'AutoShareServer'
+    path: 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters'
+    data: 0
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'RestrictAnonymous'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'NtpServer'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\Parameters'
+    data: 'time.windows.com,0x8'
+    type: 'string'
+  
+- name: Test
+  win_regedit:
+    name: 'NoLMHash'
+    path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+    data: 0
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'DontDisplayLastUserName'
+    path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'ScreenSaverIsSecure'
+    path: 'HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\Control Panel\Desktop'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit: 
+    name: 'DisableCAD'
+    path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'AddPrinterDrivers'
+    path: 'HKLM:\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'AllocateCDRoms'
+    path: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'ShutdownWithoutLogon'
+    path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System'
+    data: '0'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'FullPrivilegeAuditing'
+    path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'ProtectionMode'
+    path: 'HKLM:\System\CurrentControlSet\Control\Session Manager'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'RequireStrongKey'
+    path: 'HKLM:\System\CurrentControlSet\Services\Netlogon\Parameters'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'DisableDomainCreds'
+    path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+    data: '1'
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'EnableICMPRedirect'
+    path: 'HKLM:\System\CurrentControlSet\Services\Tcpip\Parameters'
+    data: 0
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'IPEnableRouter'
+    path: 'HKLM:\System\CurrentControlSet\Services\Tcpip\Parameters'
+    data: 0
+    type: 'dword'
+  
+- name: Test
+  win_regedit: 
+    name: 'LegalNoticeCaption'
+    path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+    data: 'Warning!'
+    type: 'string'
+  
+- name: Test
+  win_regedit:
+    name: 'LegalNoticeText'
+    path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+    data: 'Notice:Unauthorized access is strictly prohibited!All access will be logged and monitored.'
+    type: 'string'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\gpsvc'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\IKEEXT'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\NlaSvc'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\BITS'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\BFE'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventSystem'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\CryptSvc'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\TrkWks'
+    data: 2
+    type: 'dword'
+    
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\PolicyAgent'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Netman'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\PlugPlay'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RpcSs'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RemoteRegistry'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\seclogon'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SamSs'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SENS'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\lmhosts'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\TermService'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Winmgmt'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\W32Time'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation'
+    data: 2
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SharedAccess'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SSDPSRV'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\AudioEndpointBuilder'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\WerSvc'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\ALG'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\AppMgmt'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\hidserv'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Control\Print'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RasAuto'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RasMan'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RSoPProv'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RemoteAccess'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\ShellHWDetection'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SCardSvr'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\sacsvr'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\tapisrv'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Themes'
+    data: 4
+    type: 'dword'
+  
+- name: Test
+  win_regedit:
+    name: 'Start'
+    path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv'
+    data: 4
+    type: 'dword'

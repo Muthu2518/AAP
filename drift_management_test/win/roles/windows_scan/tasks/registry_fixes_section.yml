@@ -1,0 +1,20 @@
+# Hardening
+---
+windows_hardening:
+  system_access: "System Access"
+    system_section:
+      group_policy_client:
+        name: 'GroupPolicyClient'
+        path: 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\gpsvc'
+        value: 'Enabled'
+        Type: 'string'
+      ike_auth_modules:
+        name: 'IKEAUTHModules'
+        path: 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\IKEEXT'
+        value: 'Enabled'
+        Type: 'string'
+      network_location_awareness:
+        name: 'NetworkLocation'
+        path: 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc'
+        value: 'Enabled'
+        Type: 'string'

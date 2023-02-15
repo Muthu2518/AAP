@@ -1,0 +1,807 @@
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<header>
+<h1> IT-F(I)-163 - Windows Server System Hardening Checklist-updated-v1.0 </h1>
+<table style="border: 1px solid black; border-collapse: collapse;">
+        <col class="col0">
+        <col class="col1">
+        <tbody>
+          <tr class="row0">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Hostname	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px; length: 100%;">{{ ansible_facts['hostname'] }}</td>
+          </tr>
+          <tr class="row1">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">IP Address	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_facts.ip_addresses[0] }}</td>
+         </tr>
+          <tr class="row2">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;""> Date </td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_date_time.date }}</td>
+         </tr>
+          <tr class="row3">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">OS Version	& Build Version</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ansible_facts['distribution']  }} & {{ ansible_facts['distribution_version']  }}</td>
+         </tr>
+          <tr class="row4">
+            <td style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Server Role	</td>
+            <td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+          </tr>
+        </tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table style="border: 1px solid black; border-collapse: collapse;">
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section A</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">A-1 Rename built-in Administrator</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">A-2 Seal and store built-in local administrator account rights in Item A.1 into PAPM system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">A-3 Create a dummy Administrator account with Normal User rights</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">A-4 Disable Guest account</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">A-5 Disable or remove all unnecessary accounts from the system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section B</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-1 Prompt user to change password in 14 days</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ guest_user_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-2 Set enforce password history to 5</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ password_history_size_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-3 Set max password age to 90 days</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ maximum_password_age_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-4 Set min password age to 1 day</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ maximum_password_age_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-5 Set min password length to 8 chars</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ minimum_password_age_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-6 Set meet complexity requirement to Enabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ password_complexity_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">B-7 Set password using reversible encryption: Disabled</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ clear_text_password_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section C</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set lockout duration to 30 minutes</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ lockout_bad_count_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set lockout threshold to 5 invalid attempts</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ lockout_duration_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set reset lockout counter to 30 minutes</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ reset_lockout_count_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section D</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set maximum Application log size to 100 mb</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ application_max_size_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set maximum Security log size to 50 mb</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ security_max_size_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set maximum System log size to 50 mb</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ security_max_size_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set retain method for Application log to As Needed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ application_retention_log_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set retain method for Security log to As Needed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ security_retention_log_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set retain method for System log to As Needed</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ system_retention_log_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section E</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Account Logon Events</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ account_logon_events_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Account Management</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ account_management_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Directory Service Access</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ directory_service_access_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Logon Events</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ logon_events_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Object Access</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ object_access_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Policy Change</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ policy_change_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Privilege Use</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ privilege_use_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Process Tracking</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ process_tracking_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">System Events</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ system_events_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section F</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">NTFS for all files system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Replace “Everyone” group to “Authenticated Users” on all drives</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ disable_memory_dump_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section G</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable unused Windows network connections</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ autoshare_server_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Permanently remove the default admin shares</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ autoshare_server_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Restrict anonymous access via null session</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ restrict_anonymous_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">List down and verify all shared folder</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Configure NTP service</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ntp_server_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable storing of LAN Manager hashvalue on next password</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ disable_storing_lan_manager_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section H</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Hiding the Last Logged On Username in the Logon Dialog</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ dont_display_last_user_name_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable Password protected screen saver</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ screen_saver_is_secure_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section I</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable Allow System to be shut down without having to logon</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ shutdown_without_logon_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable audit use of backup and restore privilege</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ backup_and_restore_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable Ctrl-Alt-Del requirement during logon</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ enable_cad_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable prevent administrator from installing printer drivers</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ installing_printer_drivers_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable restrict CD-ROM access to locally logged-on user only</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ cd_rom_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to load and unload device drivers</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seload_driver_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Authenticated Users to add workstations to domain</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ semachine_account_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to adjust memory quotas for a process</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seIncreaseQuota_Privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only LOCAL SERVICE NETWORK SERVICE Administrators to generate security audits</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seAudit_Privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only LOCAL SERVICE NETWORK SERVICE to replace a process level token unless specially required</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seAssignPrimaryToken_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to remove computer from docking station</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seundock_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable strengthen default permissions of global system objects</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ global_system_objects_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set User must enter a password each time they use a key in System Cryptography</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ strong_key_protection_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable domain members to use strong session key</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ strong_session_key_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Prevent Stored User Names and Passwords from storing passwords and credentials</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ disable_domain_creds_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable domain members to require a negotiation of message confidentiality between Domain Controllers</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ sesecurity_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Restrict users from accessing a computer over a network</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seDenyNetworkLogon_Right_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Restrict users and groups from logging in as a Terminal Service clients</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seDenyRemoteInteractiveLogon_Right_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to allow process to impersonate any user without authentication</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ setcb_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to shut down the operating system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seshutdown_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators Backup Operators Power Users to allow log on locally to the operating system</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seInteractiveLogon_Right_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators and Backup Operators to allow backup files and directories on OS</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ sebackup_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remove all user and computer object rights to be Trusted for Delegation</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seenable_delegation_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remove all user rights to shut down a computer from a remote location on the network</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ seenable_delegation_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set only Administrators to access auditing options for individual resources</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ sesecurity_privilege_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable user rights to view their Resultant Set of Policy</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section J</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Enable SNMP settings</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section K</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Set value to disable on Enable ICMPRedirect</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ enable_icmp_redirect_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Disable IP forwarding</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ip_enable_router_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section L</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remove Users group access from Read  Execute access to the below EXE files</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ l1_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section M</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows text logon banner</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_title_logon_banner_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows title logon banner</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_text_logon_banner_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section N</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Install antivirus software and run automatically in the background</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section O</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Group Policy Client</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ group_policy_client_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">IKE and AuthIP IPsec Keying Modules</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ike_and_authip_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Network Location Awareness</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ network_location_awareness_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Update</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_update_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Background Intelligent Transfer Service</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ background_intelligent_transfer_service_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Base Filtering Engine</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ base_filtering_engine_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">COM and Event System</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ com_event_system_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Cryptographic Services</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ cryptographic_services_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Distributed Link Tracking Client</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ distributed_link_tracking_client_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">DNS Client</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ dns_client_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Event Log</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_event_log_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">IPSEC Policy Agent</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ ipsec_policy_agent_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Net Logon</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ net_logon_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Network Connections</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ network_connections_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Plug and Play</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ plug_and_play_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Protected Storage 2008 and 2008R2 Only</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remote Procedure Call</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ remote_procedure_call_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remote Registry</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ remote_registry_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Secondary Logon</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ secondary_logon_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Security Accounts Manager</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ security_accounts_manager_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Server</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ server_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">System Event Notification Service</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ system_event_notification_service_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">TCP and IP NetBIOS Helper</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ tcp_ip_netbios_helper_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Terminal Services</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ terminal_services_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Management Instrumentation</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_management_instrumentation_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Time</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ windows_time_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Workstation</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ workstation_results }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</th>
+</tr>
+<tr>
+<th colspan="3" style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Section P</th>
+</tr>
+<tr>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Baseline</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Complaine</th>
+<th style="border: 1px solid black;background-color:#0000FF; color: #FFFFFF; padding: 8px 16px;">Remarks</th>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Internet Connection Sharing</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">SSDP Discovery</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Audio Endpoint Builder</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Error Reporting Service</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Application Layer Gateway Service</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Application Management</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Human Interface Device Access</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Print Spooler</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remote Access Auto Connection Manager</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Remote Access Connection Manager</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Resultant Set of Policy Provider</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Routing and Remote Access</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Shell Hardware Detection</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Smart Card</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Special Administration Console Helper</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Telephony</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Themes</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">Windows Audio</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">{{ NA }}</td>
+<td style="border: 1px solid black;background-color:#FFFFFF; padding: 8px 16px;">&nbsp;</td>
+</tr>
+
+</table>
+
+

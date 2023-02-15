@@ -1,0 +1,1461 @@
+<!DOCTYPE html>  
+<!--<html xmlns="http://www.w3.org/1999/xhtml"> -->
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <div align="center"><h1><b> Scanning Report</b></h1></div>  
+    <table border="5" width="100%" height="100%"> 
+        <tr>
+            <td>Project</td>
+            <td>AAP</td>
+        </tr>
+        <tr>
+            <td>Environment</td>
+            <td>UAT</td>
+        </tr>
+        <tr>
+            <td>Server OS</td>
+            <td>RHEL</td>
+        </tr>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>A.</td> 
+            <td>Account</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Seal and store built-in local root account in PAPM system</td>
+            <td> </td>  
+            <td> </td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Disable or remove all unnecessary accounts from the system</td>
+            <td> </td>  
+            <td> </td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure system accounts are non-login</td>
+            <td> </td>  
+            <td> </td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure default group for the root account is GID 0</td>
+            <td></td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure default user umask is 027 or more restrictive</td>
+            <td></td>  
+            <td></td>
+        </tr> 
+        <tr>
+            <td>6.</td>
+            <td>Ensure default user shell timeout is 900 seconds or less</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Ensure access to the su command is restricted</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+    </table>  
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>B.</td> 
+            <td>Password</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Prompt user to change password in 14 days 
+Interactive Logon</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Set enforce password history to 5</td>
+            <td></td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Set max password age to 90 days</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Set min password age to 7 day</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Set min password length is 8 chars</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Set meet complexity requirement to Enabled</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Ensure all users last password change date is in the past</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>8.</td>
+            <td>Ensure password hashing algorithm is SHA-512</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>C.</td> 
+            <td>Account Lockout</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Set lockout duration to 30 minutes</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Set lockout threshold to 5 invalid attempts</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Set reset lockout counter to 30 minutes</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+    </table>
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>D.</td> 
+            <td>System File Permissions</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure permissions on /etc/passwd are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure permissions on /etc/shadow are configure</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure permissions on /etc/group are configured</td>
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure permissions on /etc/gshadow are configured</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure permissions on /etc/passwd- are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>9.</td>
+            <td>Ensure permissions on /etc/shadow- are configured</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>10.</td>
+            <td>Ensure permissions on /etc/group- are configured</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>11.</td>
+            <td>Ensure permissions on /etc/gshadow- are configured</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>12.</td>
+            <td>Ensure no world writable files exist</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>13.</td>
+            <td>Ensure no unowned files or directories exist</td> 
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>14.</td>
+            <td>Ensure no ungrouped files or directories exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>15.</td>
+            <td>Audit SUID executables </td> 
+            <td>NA</td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>16.</td>
+            <td>Audit SGID executables </td> 
+            <td>NA</td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>17.</td>
+            <td>Perform audit system file permissions to confirm that package system files </td> 
+            <td>NA</td> 
+            <td></td>
+        </tr>
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>E.</td> 
+            <td>File System Configuration</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure mounting of cramfs filesystems is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure mounting of freevxfs filesystems is disabled</td>
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure mounting of jffs2 filesystems is disabled</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure mounting of hfs filesystems is disabled </td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure mounting of hfsplus filesystems is disable</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Ensure mounting of squashfs filesystems is disabled</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Ensure mounting of udf filesystems is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>8.</td>
+            <td>Ensure mounting of FAT filesystems is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>9.</td>
+            <td>Ensure separate partition exists for /tmp</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr> 
+            <td>10.</td> 
+            <td>Ensure nodev option set on /tmp partition</td>  
+            <td> </td>
+            <td> </td>
+        </tr>  
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure nosuid option set on /tmp partition</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Ensure noexec option set on /tmp partition</td>
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure nodev option set on /dev/shm partition</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure nosuid option set on /dev/shm partition</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>15.</td>  
+            <td>Ensure noexec option set on /dev/shm partition</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>16.</td>
+            <td>Ensure nodev option set on removable media partitions</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>17.</td>
+            <td>Ensure nosuid option set on removable media partitions</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>18.</td>
+            <td>Ensure noexec option set on removable media partitions</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>19.</td>
+            <td>Ensure sticky bit is set on all world-writable directories</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>20.</td>
+            <td>Disable Automounting</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>21.</td>
+            <td>Ensure AIDE is installed</td> 
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>22.</td>
+            <td>Ensure filesystem integrity is regularly checked</td>
+            <td> </td>
+            <td> </td>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>F.</td> 
+            <td>Network</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure IP forwarding is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure packet redirect sending is disabled</td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure source routed packets are not accepted</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure ICMP redirects are not accepted</td>
+            <td></td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure secure ICMP redirects are not accepted</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure suspicious packets are logged</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure broadcast ICMP requests are ignored </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure bogus ICMP responses are ignored</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Ensure Reverse Path Filtering is enabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Ensure TCP SYN Cookies is enabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure IPv6 router advertisements are not accepted</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>
+            <td>Ensure IPv6 redirects are not accepted</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure IPv6 is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure TCP Wrappers is installed</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Ensure /etc/hosts.allow is configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Ensure /etc/hosts.deny is configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Ensure permissions on /etc/hosts.allow are configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Ensure permissions on /etc/hosts.deny are configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>19.</td>  
+            <td>Ensure DCCP is disabled </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>20.</td>  
+            <td>Ensure SCTP is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>21.</td>  
+            <td>Ensure RDS is disabled </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>22.</td>  
+            <td>Ensure TIPC is disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>23.</td>  
+            <td>Ensure iptables is installed</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>24.</td>  
+            <td>Ensure default deny firewall policy</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>25.</td>  
+            <td>Ensure loopback traffic is configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>26.</td>  
+            <td>Ensure outbound and established connections are configured</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>27.</td>  
+            <td>Ensure firewall rules exist for all open ports</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>28.</td>  
+            <td>Ensure wireless interfaces are disabled</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>G.</td> 
+            <td>Time Synchronization</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure time synchronization is in use</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure ntp is configured</td>
+            <td> </td>  
+            <td></td>
+        </tr> 
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>H.</td> 
+            <td>Additional Process Hardening</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure core dumps are restricted</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure XD/NX support is enabled</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure address space layout randomization (ASLR) is enabled</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure prelink is disabled</td>
+            <td> </td>
+            <td></td>
+        </tr> 
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>I.</td> 
+            <td>Configure SELinux</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure SELinux is not disabled in bootloader configuration</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure the SELinux state is enforcing</td>
+            <td> </td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure SELinux policy is configured</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure the MCS Translation Service (mcstrans) is not installed</td>
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure no unconfined daemons exist</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Ensure SELinux is installed</td>
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>J.</td> 
+            <td>Configure CRON</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure cron daemon is enabled</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure permissions on /etc/crontab are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure permissions on /etc/cron.hourly are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure permissions on /etc/cron.daily are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure permissions on /etc/cron.weekly are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure permissions on /etc/cron.monthly are configured</td>
+            <td> </td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure permissions on /etc/cron.d are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure at/cron is restricted to authorized users</td>
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>K.</td> 
+            <td>Configure SSH</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure permissions on /etc/ssh/sshd_config are configured</td>
+            <td></td>    
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure SSH Protocol is set to 2</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure SSH LogLevel is set to INFO</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure SSH X11 forwarding is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure SSH MaxAuthTries is set to 4 or less</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure SSH IgnoreRhosts is enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure SSH HostbasedAuthentication is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure SSH root login is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Ensure SSH PermitEmptyPasswords is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Ensure SSH PermitUserEnvironment is disabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure only approved MAC algorithms are used</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Ensure SSH Idle Timeout Interval is configured</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure SSH LoginGraceTime is set to one minute or less</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure SSH access is limited</td>
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>L.</td> 
+            <td>User and Group Settings</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure password fields are not empty</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure no legacy "+" entries exist in /etc/passwd</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure no legacy "+" entries exist in /etc/shadow</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure no legacy "+" entries exist in /etc/group</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure root is the only UID 0 account</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure root PATH Integrity</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure all users' home directories exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure users' home directories permissions are 750 or more restrictive</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Ensure users own their home directories</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Ensure users' dot files are not group or world writable</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure no users have .forward files</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Ensure no users have .netrc files</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure users' .netrc Files are not group or world accessible</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure no users have .rhosts files</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Ensure all groups in /etc/passwd exist in /etc/group</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Ensure no duplicate UIDs exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Ensure no duplicate GIDs exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Ensure no duplicate user names exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>19.</td>  
+            <td>Ensure no duplicate group names exist</td>
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="50%">  
+        <tr> 
+            <td>M.</td> 
+            <td>Warning Banners</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure message of the day is configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure local login warning banner is configured</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure remote login warning banner is configured properly</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure permissions on /etc/motd are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure permissions on /etc/issue are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure permissions on /etc/issue.net are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure GDM login banner is configured</td>
+            <td></td>     
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure SSH warning banner is configured</td>
+            <td></td>     
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="10%">  
+        <tr> 
+            <td>N.</td> 
+            <td>Antivirus Software</td>  
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Install antivirus software and run automatically in the background</td>
+            <td></td>  
+            <td></td>
+        </tr>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr>  
+            <td>O.</td>  
+            <td>System Services to be Not Enabled</td>
+            <td>Result</td>  
+            <td>Remarks</td>
+        </tr>
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure chargen services are not enabled</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure daytime services are not enabled </td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure discard services are not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure echo services are not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure time services are not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure tftp server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure xinetd is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure X Window System is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Ensure Avahi Server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Ensure CUPS is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure DHCP Server is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Ensure LDAP server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure NFS and RPC are not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure DNS Server is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Ensure FTP Server is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Ensure HTTP server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Ensure IMAP and POP3 server is not enabled  </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Ensure Samba is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>19.</td>  
+            <td>Ensure HTTP Proxy Server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>20.</td>  
+            <td>Ensure mail transfer agent is configured for local-only mode</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>21.</td>  
+            <td>Ensure NIS Server is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>22.</td>  
+            <td>Ensure rsh server is not enabled </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>23.</td>  
+            <td>Ensure telnet server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>24.</td>  
+            <td>Ensure tftp server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>25.</td>  
+            <td>Ensure rsync service is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr><tr>  
+            <td>26.</td>  
+            <td>Ensure talk server is not enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>27.</td>  
+            <td>Ensure NIS Client is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>28.</td>  
+            <td>Ensure rsh client is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>29.</td>  
+            <td>Ensure talk client is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>30.</td>  
+            <td>Ensure telnet client is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>31.</td>  
+            <td>Ensure LDAP client is not installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr>  
+            <td>P.</td>  
+            <td>Logging and Auditing</td>
+            <td>Result</td>  
+            <td>Remarks</td>
+        </tr>
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure audit log storage size is configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure auditd service is enabled </td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure auditing for processes that start prior to auditd is enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure events that modify date and time information are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure events that modify user/group information are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Ensure events that modify the system's network environment are collected </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Ensure events that modify the system's Mandatory Access Controls are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Ensure login and logout events are collected </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Ensure session initiation information is collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Ensure discretionary access control permission modification events are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Ensure unsuccessful unauthorized file access attempts are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Ensure use of privileged commands is collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Ensure successful file system mounts are collected </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Ensure file deletion events by users are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Ensure changes to system administration scope (sudoers) is collected </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Ensure system administrator actions (sudolog) are collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Ensure kernel module loading and unloading is collected</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Ensure the audit configuration is immutable </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>19.</td>  
+            <td>Ensure rsyslog Service is enabled</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>20.</td>  
+            <td>Ensure logging is configured</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>21.</td>  
+            <td>Ensure rsyslog default file permissions configured </td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>22.</td>  
+            <td>Ensure rsyslog is configured to send logs to a remote log host</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>23.</td>  
+            <td>Ensure remote rsyslog messages are only accepted on designated log hosts.</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>24.</td>  
+            <td>Ensure rsyslog or syslog-ng is installed</td>
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>25.</td>  
+            <td>Ensure permissions on all logfiles are configured</td>
+            <td></td>  
+            <td></td>
+        </tr><tr>  
+            <td>26.</td>  
+            <td>Ensure logrotate is configured (Not Scored) </td>
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr>  
+            <td>Q.</td>  
+            <td>Secure Boot settings</td>
+            <td>Result</td>  
+            <td>Remarks</td>
+        </tr>
+        <tr>  
+            <td>1.</td>  
+            <td>Ensure permissions on bootloader config are configured</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Ensure bootloader password is set</td>
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure authentication required for single user mode</td>
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+</html>

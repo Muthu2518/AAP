@@ -1,0 +1,497 @@
+---
+windows_hardening:
+  system_access: "System Access"
+  password_section:
+    password_expiry_warning:
+      name: 'PasswordExpiryWarning'
+      path: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
+      value: 14
+    password_history_size:
+      name: 'PasswordHistorySize'
+      value: 5
+    maximum_password_age:
+      name: 'MaximumPasswordAge'
+      value: 90
+    minimum_password_age:
+      name: 'MinimumPasswordAge'
+      value: 1
+    minimum_password_length:
+      name: 'MinimumPasswordLength'
+      value: 8
+    password_complexity:
+      name: 'PasswordComplexity'
+      value: 1
+    clear_text_password:
+      name: 'ClearTextPassword'
+      value: 0
+  account_lockout_section:
+    lockout_bad_count:
+      name: 'LockoutBadCount'
+      value: 5
+    lockout_duration:
+      name: 'LockoutDuration'
+      value: 1800
+    reset_lockout_count:
+      name: 'ResetLockoutCount'
+      value: 1800
+  logging_section:
+    application_max_size:
+      name: 'Maxsize'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application'
+      value: 102400
+    security_max_size:
+      name: 'Maxsize'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Security'
+      value: 51200
+    system_max_size:
+      name: 'Maxsize'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\System'
+      value: 51200
+    application_retention_log:
+      name: 'Retention'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application'
+      value: 0
+    security_retention_log:
+      name: 'Retention'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Security'
+      value: 0
+    system_retention_log:
+      name: 'Retention'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\System'
+      value: 0
+    group_policy_client:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\gpsvc'
+      value: 2
+  auditing_section:
+    account_logon_events:
+      name: 'AuditAccountLogon'
+      value: 3
+    account_management:
+      name: 'AuditAccountManage'
+      value: 3
+    directory_service_access:
+      name: 'AuditDSAccess'
+      value: 2
+    logon_events:
+      name: 'AuditLogonEvents'
+      value: 3
+    object_access:
+      name: 'AuditObjectAccess'
+      value: 2
+    policy_change:
+      name: 'AuditPolicyChange'
+      value: 3   
+    privilege_use:
+      name: 'AuditPrivilegeUse'
+      value: 3
+    process_tracking:
+      name: 'AuditProcessTracking'
+      value: 3
+    system_events:
+      name: 'AuditSystemEvents'
+      value: 3
+  file_system_section:  
+    disable_memory_dump:
+      name: 'CrashDumpEnabled'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Control\CrashControl'
+      value: 0
+  network_section:
+    autoshare_server: 
+      name: 'AutoShareServer'
+      path: 'HKLM:\System\CurrentControlSet\Services\LanmanServer\Parameters'
+      value: 0
+    restrict_anonymous:
+      name: 'RestrictAnonymous'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa'
+      value: 2
+    ntp_server:
+      name: 'NtpServer'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\Parameters'
+      value: 'time.windows.com,0x8'
+    disable_storing_lan_manager:
+      name: 'NoLMHash'
+      path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+      value: 0
+  registry_fixes_section:
+    dont_display_last_user_name:
+      name: 'DontDisplayLastUserName'
+      path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+      value: '1'
+      type: 'dword'
+    screen_saver_is_secure:
+      name: 'ScreenSaverIsSecure'
+      path: 'HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\Control Panel\Desktop'
+      value: '1'
+      type: 'string'
+  security_section:
+    enable_cad: 
+      name: 'DisableCAD'
+      path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+      value: '1'
+    installing_printer_drivers:
+      name: 'AddPrinterDrivers'
+      path: 'HKLM:\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers'
+      value: '1'
+    cd_rom:
+      name: 'AllocateCDRoms'
+      path: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
+      value: '1'
+    shutdown_without_logon:
+      name: 'ShutdownWithoutLogon'
+      path: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System'
+      value: '0'
+    backup_and_restore_privilege:
+      name: 'FullPrivilegeAuditing'
+      path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+      value: '1'
+    global_system_objects:
+      name: 'ProtectionMode'
+      path: 'HKLM:\System\CurrentControlSet\Control\Session Manager'
+      value: '1'
+    strong_session_key:
+      name: 'RequireStrongKey'
+      path: 'HKLM:\System\CurrentControlSet\Services\Netlogon\Parameters'
+      value: '1'
+    strong_key_protection :
+      name: 'ForceKeyProtection'
+      path: 'HKLM:\Software\Policies\Microsoft\Cryptography'
+      value: '2'
+    disable_domain_creds :
+      name: 'DisableDomainCreds'
+      path: 'HKLM:\System\CurrentControlSet\Control\Lsa'
+      value: '1'
+    seshutdown_privilege:
+      name: 'SeShutdownPrivilege'
+      value: '*S-1-5-32-544'
+    seundock_privilege:
+      name: 'SeUndockPrivilege'
+      value: '*S-1-5-32-544'
+    sesecurity_privilege:
+      name: 'SeSecurityPrivilege'
+      value: '*S-1-5-32-544'
+    seremote_shutdown_privilege:
+      name: 'SeRemoteShutdownPrivilege'
+      value: ''
+    seenable_delegation_privilege:
+      name: 'SeEnableDelegationPrivilege'
+      value: ''
+    sebackup_privilege:
+      name: 'SeBackupPrivilege'
+      value: '*S-1-5-32-544,*S-1-5-32-551'
+    setcb_privilege:
+      name: 'SeTcbPrivilege'
+      value: '*S-1-5-32-544'  
+    semachine_account_privilege:
+      name: 'SeMachineAccountPrivilege'
+      value: '*S-1-5-11'
+    seload_driver_privilege:
+      name: 'SeLoadDriverPrivilege'
+      value: '*S-1-5-32-544'
+    seIncreaseQuota_Privilege:
+      name: 'SeIncreaseQuotaPrivilege'
+      value: '*S-1-5-19,*S-1-5-20,*S-1-5-32-544'
+    seAudit_Privilege:
+      name: 'SeAuditPrivilege'
+      value: '*S-1-5-19,*S-1-5-20'
+    seAssignPrimaryToken_Privilege:
+      name: 'SeAssignPrimaryTokenPrivilege'
+      value: '*S-1-5-19,*S-1-5-20'
+    seDenyNetworkLogon_Right:
+      name: 'SeDenyNetworkLogon_Right'
+      value: 'Guest,*S-1-5-7'
+    seDenyRemoteInteractiveLogon_Right:
+      name: 'SeDenyRemoteInteractiveLogonRight'
+      value: 'Guest'
+    seInteractiveLogon_Right:
+      name: 'SeInteractiveLogonRight'
+      value: '*S-1-5-32-544,*S-1-5-32-545,*S-1-5-32-551'
+  denyRsop_ToInteractiveUser:
+    DenyRsop_ToInteractiveUser:
+      name: 'DenyRsopToInteractiveUser'
+      path: 'HKLM:\Software\Policies\Microsoft\Windows\System'
+      value: 1
+  tcp_ip_registry_tightening:
+    enable_icmp_redirect:
+      name: 'EnableICMPRedirect'
+      path: 'HKLM:\System\CurrentControlSet\Services\Tcpip\Parameters'
+      value: 0
+    ip_enable_router:
+      name: 'IPEnableRouter'
+      path: 'HKLM:\System\CurrentControlSet\Services\Tcpip\Parameters'
+      value: 0
+  windows_logon_banner_section:
+    windows_title_logon_banner: 
+      name: 'LegalNoticeCaption'
+      path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+      value: 'Warning!'
+    windows_text_logon_banner:
+      name: 'LegalNoticeText'
+      path: 'HKLM:\Software\Microsoft\Windows\Currentversion\Policies\System'
+      value: 'Notice:Unauthorized access is strictly prohibited!All access will be logged and monitored.'
+  system_services:
+    group_policy_client:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\gpsvc'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    ike_and_authip:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\IKEEXT'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    network_location_awareness:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\NlaSvc'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    windows_update:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\wuauserv'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    background_intelligent_transfer_service:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\BITS'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    base_filtering_engine:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\BFE'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    com_event_system:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventSystem'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    cryptographic_services:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\CryptSvc'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    distributed_link_tracking_client:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\TrkWks'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    dns_client:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    windows_event_log:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\EventLog'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    ipsec_policy_agent:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\PolicyAgent'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    net_logon:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    network_connections:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Netman'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    plug_and_play:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\PlugPlay'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    remote_procedure_call:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RpcSs'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    remote_registry:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RemoteRegistry'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    secondary_logon:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\seclogon'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    security_accounts_manager:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SamSs'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    server:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    system_event_notification_service:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SENS'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    tcp_ip_netbios_helper:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\lmhosts'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    terminal_services:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\TermService'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    windows_management_instrumentation:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Winmgmt'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    windows_time:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\W32Time'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+    workstation:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation'
+      value: 2
+      type: 'REG_DWORD'
+      raw_value: 2
+  system_services_disabled:
+    internet_connection_sharing:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SharedAccess'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    ssdp_discovery:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SSDPSRV'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    windows_audio_endpoint_builder:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\AudioEndpointBuilder'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    windows_error_reporting_service:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\WerSvc'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    application_layer_gateway_service:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\ALG'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    application_management:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\AppMgmt'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    human_interface_device_access:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\hidserv'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    print_spooler:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Control\Print'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    remote_access_auto_connection_manager:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RasAuto'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    remote_access_connection_manager:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RasMan'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    resultant_set_of_policy_provider:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RSoPProv'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    routing_and_remote_access:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\RemoteAccess'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    shell_hardware_detection:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\ShellHWDetection'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    smart_card:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\SCardSvr'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    special_administration_console_helper:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\sacsvr'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    telephony:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\tapisrv'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    themes:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Themes'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4
+    windows_audio:
+      name: 'Start'
+      path: 'HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv'
+      value: 4
+      type: 'REG_DWORD'
+      raw_value: 4

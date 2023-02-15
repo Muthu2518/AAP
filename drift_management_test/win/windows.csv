@@ -1,0 +1,6 @@
+Hostname,IPAddress,Date,Baseline,Results
+winvmtesting004,192.168.1.116,2022-12-27,A-1 Rename built-in Administrator,Not Applicable
+winvmtesting004,192.168.1.116,2022-12-27,A-2 Seal and store built-in local administrator account rights in Item A.1 into PAPM system,Not Applicable
+winvmtesting004,192.168.1.116,2022-12-27,A-3 Create a dummy Administrator account with Normal User rights,Not Applicable
+winvmtesting004,192.168.1.116,2022-12-27,A-4 Disable Guest account,Complaint
+winvmtesting004,192.168.1.116,2022-12-27,A-5 Disable or remove all unnecessary accounts from the system,Not Applicable

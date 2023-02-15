@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  become: yes
+  gather_facts: yes
+
+  tasks:    
+    - name: remediation task
+      include_tasks: pingtest.yml

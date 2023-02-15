@@ -1,0 +1,83 @@
+---
+hardening_baseline:
+- { descrip: 'B-1 Prompt user to change password in 14 days', cmd_type: grep, cmd: 'grep -q "PASS_WARN_AGE 14" /etc/login.defs'}
+- { descrip: 'B-2 Set enforce password history to 5', cmd_type: grep, cmd: 'grep -q "remember=5" /etc/pam.d/password-auth'}
+- { descrip: 'B-3 Set max password age to 90 days', cmd_type: grep, cmd: 'grep -q "PASS_MAX_DAYS 90" /etc/login.defs'}
+- { descrip: 'B-4 Set min password age to 7 days', cmd_type: grep, cmd: 'grep -q "PASS_MIN_DAYS 7" /etc/login.defs'}
+- { descrip: 'B-5 Set min password length to 8 chars', cmd_type: grep, cmd: 'grep -q "PASS_MIN_LEN 8" /etc/login.defs'}
+- { descrip: 'B-6 Set meet complexity requirement contain chars of at least 3 of groups', cmd_type: grep, cmd: 'grep -q "minclass=3" /etc/security/pwquality.conf'}
+- { descrip: 'B-8 Ensure password hashing algorithm is SHA-512', cmd_type: grep, cmd: 'grep -q "sha512" /etc/pam.d/password-auth'}
+- { descrip: 'C-2 Set lockout threshold to 5 invalid attempts', cmd_type: grep, cmd: 'sudo grep -q "unlock_time = 600" /etc/security/faillock.conf'}
+- { descrip: 'C-3 Set reset lockout counter to 30 minutes', cmd_type: grep, cmd: 'sudo grep -q "deny = 5" /etc/security/faillock.conf'}
+- { descrip: 'E-1 File System Configuration-cramps', cmd_type: grep, cmd: 'grep -q "install cramfs /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-2 File System Configuration-freevxfs', cmd_type: grep, cmd: 'grep "install freevxfs /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-3 File System Configuration-jffs2', cmd_type: grep, cmd: 'grep "install jffs2 /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-4 File System Configuration-hfs', cmd_type: grep, cmd: 'grep "install hfs /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-5 File System Configuration-hfsplus', cmd_type: grep, cmd: 'grep "install hfsplus /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-6 File System Configuration-squashfs', cmd_type: grep, cmd: 'grep "install squashfs /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-7 File System Configuration udf', cmd_type: grep, cmd: 'grep "install udf /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-8 File System Configuration vfat', cmd_type: grep, cmd: 'grep "install vfat /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'E-9 Ensure systemd is mounting /tmp', cmd_type: grep, cmd: 'mount | grep -q /tmp'}
+- { descrip: 'E-10 Ensure nodev option set on /tmp partition', cmd_type: grep, cmd: 'mount | grep /tmp | grep -q "nodev"'}
+- { descrip: 'E-11 Ensure nosuid option set on /tmp partition', cmd_type: grep, cmd: 'mount | grep /tmp | grep -q "nosuid"'}
+- { descrip: 'E-12 Ensure noexec option set on /tmp partition', cmd_type: grep, cmd: 'mount | grep /tmp | grep -q "noexec"'}
+- { descrip: 'E-13 Ensure nodev option set on /dev/shm partition', cmd_type: grep, cmd: 'mount | grep /dev/shm | grep -q "nodev"'}
+- { descrip: 'E-14 Ensure nosuid option set on /dev/shm partition', cmd_type: grep, cmd: 'mount | grep /dev/shm | grep -q "nosuid"'}
+- { descrip: 'E-15 Ensure noexec option set on /dev/shm partition', cmd_type: grep, cmd: 'mount | grep /dev/shm | grep -q "noexec"'}
+- { descrip: 'E-21 Ensure AIDE is installed', cmd_type: grep, cmd: 'rpm -qa aide'}
+- { descrip: 'F-1 Ensuring ipv4 forwarding is disabled', cmd_type: grep, cmd: 'grep -q "net.ipv4.ip_forward = 0" /etc/sysctl.conf'}
+- { descrip: 'F-2 Ensuring packet redirect sending is disabled', cmd_type: grep, cmd: 'grep -q "net.ipv4.conf.all.send_redirects = 0" /etc/sysctl.conf'}
+- { descrip: 'F-3 Ensuring source routed packets are not accepted', cmd_type: grep, cmd: 'grep -q "net.ipv4.conf.all.accept_source_route = 0" /etc/sysctl.conf'}
+- { descrip: 'F-4 Ensuring ICMP redirects are not accepted', cmd_type: grep, cmd: 'grep -q "net.ipv4.conf.all.accept_redirects = 0" /etc/sysctl.conf'}
+- { descrip: 'F-5 Ensuring secure ICMP redirects are not accepted', cmd_type: grep, cmd: 'grep -q "net.ipv4.conf.all.secure_redirects = 0" /etc/sysctl.conf'}
+- { descrip: 'F-6 Ensuring suspicious packets are logged', cmd_type: grep, cmd: 'grep -q "net.ipv4.conf.all.log_martians = 1" /etc/sysctl.conf'}
+- { descrip: 'F-7 Ensuring broadcast ICMP requests are ignored', cmd_type: grep, cmd: 'grep -q "net.ipv4.icmp_echo_ignore_broadcasts = 1" /etc/sysctl.conf'}
+- { descrip: 'F-8 Ensuring bogus ICMP requests are ignored', cmd_type: grep, cmd: 'grep -q "net.ipv4.icmp_ignore_bogus_error_responses = 1" /etc/sysctl.conf'}
+- { descrip: 'F-9 Ensuring reverse path filtering is enabled', cmd_type: grep, cmd: 'grep -q "net.ipv4.icmp_ignore_bogus_error_responses = 1" /etc/sysctl.conf'}
+- { descrip: 'F-10 Ensuring TCP SYN cookies are enabled', cmd_type: grep, cmd: 'grep -q "net.ipv4.tcp_syncookies = 1" /etc/sysctl.conf'}
+- { descrip: 'F-11 Ensuring IPv6 router advertisements are not accepted', cmd_type: grep, cmd: 'grep -q "net.ipv6.conf.all.accept_ra = 0" /etc/sysctl.conf'}
+- { descrip: 'F-12 Ensuring IPv6 redirects are not accepted', cmd_type: grep, cmd: 'grep -q "net.ipv6.conf.all.accept_redirects = 0" /etc/sysctl.conf'}
+- { descrip: 'F-13 Ensure IPv6 is Disabled', cmd_type: grep, cmd: 'grep -q "options ipv6 disable=1" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'F-14 Ensure TCP Wrappers is installed', cmd_type: grep, cmd: 'rpm -qa tcp_wrappers'}
+- { descrip: 'F-15 Ensure /etc/hosts.allow is configured', cmd_type: grep, cmd: 'grep -q "ALL: <net>/<mask>, <net>/<mask>, ..." /etc/hosts.allow'}
+- { descrip: 'F-16 Ensure /etc/hosts.deny is configured', cmd_type: grep, cmd: 'grep -q "ALL: ALL" /etc/hosts.deny'}
+- { descrip: 'F-17 Ensure permissions on /etc/hosts.allow are configured', cmd_type: grep, cmd: 'stat /etc/hosts.allow > /tmp/host.allow-result.txt | grep -q "0644/-rw-r--r--" /tmp/host.allow-result.txt'}
+- { descrip: 'F-18 Ensure permissions on /etc/hosts.deny are configured', cmd_type: grep, cmd: 'stat /etc/hosts.deny > /tmp/host.allow-result.txt | grep -q "0644/-rw-r--r--" /tmp/host.deny-result.txt'}
+- { descrip: 'F-19 Disabling uncommon network protocols', cmd_type: grep, cmd: 'grep -q "install dccc /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'F-20 Disabling SCTP protocol', cmd_type: grep, cmd: 'grep -q "install dccc /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'F-21 Disabling RDS protocol', cmd_type: grep, cmd: 'grep -q "install ads /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'F-22 Ensure /etc/hosts.deny is configured', cmd_type: grep, cmd: 'grep -q "install tipc /bin/true" /etc/modprobe.d/CIS.conf'}
+- { descrip: 'F-23 Ensure iptables is installed', cmd_type: grep, cmd: 'rpm -qa iptables'}
+- { descrip: 'F-25 Ensure loopback traffic is configured', cmd_type: grep, cmd: 'sudo iptables -L OUTPUT -v -n | grep -q "lo"'}
+- { descrip: 'F-26 Ensure outbound and established connections are configured', cmd_type: grep, cmd: 'sudo iptables -L -v -n | grep -q "*ESTABLISHED"'}
+- { descrip: 'F-28 Ensure wireless interfaces are disabled  ', cmd_type: grep, cmd: 'sudo nmcli device | grep -q "wifi"'}
+- { descrip: 'G-1 Ensure time synchronization is in use', cmd_type: grep, cmd: 'rpm -qa chrony'}
+- { descrip: 'G-2 Ensure ntp is configured', cmd_type: grep, cmd: 'grep -q "^OPTIONS" /etc/sysconfig/chronyd'}
+- { descrip: 'H-1 Ensuring core dumps are restricted', cmd_type: grep, cmd: 'grep -q -e "* hard core 0" /etc/security/limits.conf'}
+- { descrip: 'H-2 Ensure XD/NX support is enabled', cmd_type: grep, cmd: 'dmesg | grep NX'}
+- { descrip: 'H-3 Ensuring address space layout randomization is enabled', cmd_type: grep, cmd: 'grep -q "kernel.randomize_va_space = 2" /etc/sysctl.conf'}
+- { descrip: 'H-4 Ensuring prelink is disabled', cmd_type: grep, cmd: 'rpm -qa prelink'}
+- { descrip: 'I-1 Ensuring grub does not have selinux disabled', cmd_type: grep, cmd: 'grep -q "selinux=0" /boot/grub2/grub.cfg'}
+- { descrip: 'I-2 Ensuring SELinux state is enforcing', cmd_type: grep, cmd: 'grep -q "SELINUX=enforcing" /etc/selinux/config'}
+- { descrip: 'I-3 Ensuring selinux policy is configured correctly', cmd_type: grep, cmd: 'grep -q "SELINUXTYPE=targeted" /etc/selinux/config'}
+- { descrip: 'I-4 Ensuring mcstrans is disabled', cmd_type: grep, cmd: 'rpm -qa mcstrans'}
+- { descrip: 'I-5 Ensure no unconfined daemons exist', cmd_type: grep, cmd: 'rpm -qa libselinux'}
+- { descrip: 'I-6 Checking to ensure that selinux is installed', cmd_type: grep, cmd: 'rpm -qa libselinux'}
+- { descrip: 'J-1 Ensuring crond service is started logging', cmd_type: grep, cmd: 'systemctl list-unit-files --state=enabled -all | grep crond'}
+- { descrip: 'K-2 Ensure SSH Protocol is set to 2', cmd_type: grep, cmd: 'grep -q "Protocol 2" /etc/ssh/sshd_config'}
+- { descrip: 'K-3 Ensure SSH LogLevel is set to INFO', cmd_type: grep, cmd: 'grep -q "LogLevel INFO" /etc/ssh/sshd_config'}
+- { descrip: 'K-4 Ensure SSH X11 forwarding is disabled', cmd_type: grep, cmd: 'grep -q "X11Forwarding no" /etc/ssh/sshd_config'}
+- { descrip: 'K-5 Ensure SSH MaxAuthTries is set to 4 or less', cmd_type: grep, cmd: 'grep -q "MaxAuthTries 4" /etc/ssh/sshd_config'}
+- { descrip: 'K-6 Ensure SSH IgnoreRhosts is enabled', cmd_type: grep, cmd: 'grep -q "IgnoreRhosts yes" /etc/ssh/sshd_config'}
+- { descrip: 'K-7 Ensure SSH HostbasedAuthentication is disabled', cmd_type: grep, cmd: 'grep -q "HostbasedAuthentication no" /etc/ssh/sshd_config'}
+- { descrip: 'K-8 Ensure SSH root login is disabled', cmd_type: grep, cmd: 'grep -q "PermitRootLogin yes" /etc/ssh/sshd_config'}
+- { descrip: 'K-9 Ensure SSH PermitEmptyPasswords is disabled', cmd_type: grep, cmd: 'grep -q "PermitEmptyPasswords no" /etc/ssh/sshd_config'}
+- { descrip: 'K-10 Ensure SSH PermitUserEnvironment is disabled', cmd_type: grep, cmd: 'grep -q "PermitUserEnvironment no" /etc/ssh/sshd_config'}
+- { descrip: 'K-11 Ensure only approved MAC algorithms are used', cmd_type: grep, cmd: 'grep -q "^MACs" /etc/ssh/sshd_config'}
+- { descrip: 'K-12 Ensure SSH Idle Timeout Interval is configured', cmd_type: grep, cmd: 'grep -q "ClientAliveInterval 300" /etc/selinux/config'}
+- { descrip: 'K-13 Ensure SSH LoginGraceTime is set to one minute or less', cmd_type: grep, cmd: 'grep -q "LoginGraceTime 60" /etc/ssh/sshd_config'}
+- { descrip: 'M-1 Ensuring /etc/motd has the relevant policy message', cmd_type: grep, cmd: 'grep -q "Warning!" /etc/mood'}
+- { descrip: 'M-2 Ensuring /etc/issue has the relevant policy message', cmd_type: grep, cmd: 'grep -q "Warning!" /etc/issue'}
+- { descrip: 'M-3 Ensuring /etc/issue.net has the relevant policy message', cmd_type: grep, cmd: 'grep -q "Warning!" /etc/issue.net'}
+- { descrip: 'M-7 Ensure permissions on /etc/issue.net are configured', cmd_type: grep, cmd: 'grep -q "Warning!" /etc/dconf/db/gdm.d/01-banner-message'}
+- { descrip: 'M-8 Ensure SSH warning banner is configured', cmd_type: grep, cmd: 'grep -q "^Banner" /etc/ssh/sshd_config'}

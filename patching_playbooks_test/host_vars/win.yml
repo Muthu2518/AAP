@@ -1,0 +1,9 @@
+---
+ansible_user: administrator
+ansible_connection: winrm
+ansible_password: 123456aA
+ansible_port: 5986
+ansible_winrm_transport: ntlm
+ansible_winrm_server_cert_validation: ignore
+ansible_python_interpreter: /usr/bin/python3.8
+ansible_winrm_kerberos_credential_delegation: yes

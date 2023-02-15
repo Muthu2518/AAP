@@ -1,0 +1,6 @@
+---
+- name: Perform scanning on 'Password' section
+  include_tasks: password_section.yml
+  when: "'yes' in user_select"
+
+

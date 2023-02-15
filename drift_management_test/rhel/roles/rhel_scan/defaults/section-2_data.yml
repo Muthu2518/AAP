@@ -1,0 +1,230 @@
+#D-1
+- name: Ensure permissions on /etc/passwd are configured
+  file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: '0644'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+    mode: '0000'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/group
+    owner: root
+    group: root
+    mode: '0644'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/gshadow
+    owner: root
+    group: root
+    mode: '0000'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/passwd-
+    owner: root
+    group: root
+    mode: '0644'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/shadow-
+    owner: root
+    group: root
+    mode: '0000'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/group-
+    owner: root
+    group: root
+    mode: '0644'
+- name: Ensure permissions on /etc/shadow are configured
+  file:
+    path: /etc/gshadow-
+    owner: root
+    group: root
+    mode: '0000'
+
+
+#J
+- name: Ensure permissions on /etc/crontab are configured
+  file:
+    path: /etc/crontab
+    owner: root
+    group: root
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.hourly are configured
+  file:
+    path: /etc/cron.hourly
+    owner: root
+    group: root
+    mode: '0700'
+- name: Ensure permissions on /etc/cron.daily are configured
+  file:
+    path: /etc/cron.daily
+    owner: root
+    group: root
+    mode: '0700'
+- name: Ensure permissions on /etc/cron.monthly are configured
+  file:
+    path: /etc/cron.monthly
+    owner: root
+    group: root
+    mode: '0700'
+- name: Ensure permissions on /etc/cron.d are configured
+  file:
+    path: /etc/cron.d
+    owner: root
+    group: root
+    mode: '0700'
+- name: Ensure permissions on /etc/cron.weekly are configured
+  file:
+    path: /etc/cron.weekly
+    owner: root
+    group: root
+    mode: '0700'
+
+
+- name: xorg-x11-server-common
+  systemd:
+    name: xorg-x11-server-common
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: avahi-daemon
+  systemd:
+    name: avahi-daemon
+    state: stopped
+    enabled: no
+- name: cups
+  systemd:
+    name: cups
+    state: stopped
+    enabled: no
+- name: dhcpd
+  service:
+    name: dhcpd
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: slapd
+  service:
+    name: slapd
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: nfs
+  service:
+    name: nfs
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: rpcbind
+  service:
+    name: rpcbind
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: named
+  service:
+    name: named
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: vsftpd
+  service:
+    name: vsftpd
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: dovecot
+  service:
+    name: dovecot
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: smb
+  service:
+    name: smb
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: squid
+  service:
+    name: squid
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: ypserv
+  service:
+    name: ypserv
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: rsh.socket
+  service:
+    name: rsh.socket
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: rlogin.socket
+  service:
+    name: rlogin.socket
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: rexec.socket
+  service:
+    name: rexec.socket
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: ntalk
+  service:
+    name: ntalk
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: telnet.socket
+  service:
+    name: telnet.socket
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: tftp.socket
+  service:
+    name: tftp.socket
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: rsyncd
+  service:
+    name: rsyncd
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+- name: SSH Privilege
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    line: "{{ item }}"
+  with_items:
+  - "LogLevel INFO"
+  - "Protocol 2"
+  - "X11Forwarding no"
+  - "MaxAuthTries 4"
+  - "IgnoreRhosts yes"
+  - "HostbasedAuthentication no"
+  - "PermitRootLogin yes"
+  - "PermitEmptyPasswords no"
+  - "PermitUserEnvironment no"
+  - "ClientAliveInterval 300"
+  - "ClientAliveCountMax 0"
+- name: /dev/shm
+  lineinfile:
+    path: /etc/fstab
+    state: present
+    line: "tmpfs	/dev/shm	tmpfs	defaults,nodev,nosuid,noexec	0 0"

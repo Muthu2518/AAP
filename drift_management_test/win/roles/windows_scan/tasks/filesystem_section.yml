@@ -1,0 +1,226 @@
+---
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    restrict_anonymous_access: "{{ lookup('ini', 'RestrictAnonymousAccess section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+    Do_not_store_LAN_Manager: "{{ lookup('ini', 'DoNotStoreLanManager section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+
+- name: Retrieve current setting of the 'RestrictAnonymousAccess' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.network_section.restrict_anonymous_access.path }}"
+    name: "{{ hardening_requirements.windows_hardening.network_section.restrict_anonymous_access.name }}"
+  register: restrict_anonymous
+  
+- name: Check compliance for 'Network' section
+  set_fact:
+    restrict_anonymous_access_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.network_section.restrict_anonymous_access.value | string == restrict_anonymous_access | int else 'Non-Complaint' }}"
+    Do_not_store_LAN_Manager_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.network_section.Do_not_store_LAN_Manager.value | string == Do_not_store_LAN_Manager | int else 'Non-Complaint' }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},'Account Lockout',{{ item[0] }},{{ item[1] }},{{ item[2] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['RestrictAnonymousAccess', "{{ hardening_requirements.windows_hardening.network_section.restrict_anonymous_access.value }}", "{{ restrict_anonymous_access }}", "{{ restrict_anonymous_access_results }}"]
+    - ['DoNotStoreLanManager', "{{ hardening_requirements.windows_hardening.network_section.Do_not_store_LAN_Manager.value }}", "{{ Do_not_store_LAN_Manager }}", "{{ Do_not_store_LAN_Manager_results }}"]
+  delegate_to: localhost
+
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    shutdown_without_logon: "{{ lookup('ini', 'ShutdownWithoutLogon section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+    enable_logon: "{{ lookup('ini', 'EnableLogon section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+
+- name: Retrieve current setting of the 'EnableLogon' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.network_section.enable_logon.path }}"
+    name: "{{ hardening_requirements.windows_hardening.network_section.enable_logon.name }}"
+  register: enable_logon
+  
+- name: Check compliance for 'Security Option' section
+  set_fact:
+    shutdown_without_logon_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.security_option_section.shutdown_without_logon.value | string == shutdown_without_logon | int else 'Non-Complaint' }}"
+    enable_logon_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.security_option_section.enable_logon.value | string == enable_logon | int else 'Non-Complaint' }}
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},'Account Lockout',{{ item[0] }},{{ item[1] }},{{ item[2] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['ShutdownWithoutLogon', "{{ hardening_requirements.windows_hardening.security_option_section.shutdown_without_logon.value }}", "{{ shutdown_without_logon }}", "{{ shutdown_without_logon_results }}"]
+    - ['EnableLogon', "{{ hardening_requirements.windows_hardening.security_option_section.enable_logon.value }}", "{{ enable_logon }}", "{{ enable_logon_results }}"]
+    
+  delegate_to: localhost
+  
+##Security Options
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    prevent_print_drivers: "{{ lookup('ini', 'PreventPrintDrivers section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+    
+- name: Check compliance for 'Logging' section
+  set_fact:
+    prevent_print_drivers_results: "{{ 'success' if hardening_requirements.windows_hardening.security_section.prevent_print_drivers.value | int == prevent_print_drivers | int else 'fail' }}"
+    
+- name: Inset entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},'Logging',{{ item[0] }},{{ item[1] }},{{ item[2] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['PreventPrintDrivers', "{{ hardening_requirements.windows_hardening.logging_section.prevent_print_drivers.value }}", "{{ prevent_print_drivers }}", "{{ prevent_print_drivers_results }}"]
+    
+  delegate_to: localhost
+  
+  
+  
+  
+  
+  
+  
+# O.System Services Baseline Windows Default Services to be “Enabled”
+#1.	Group Policy Client
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    group_policy_client: "{{ lookup('ini', 'GroupPolicyClient section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'GroupPolicyClient' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.group_policy_client.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.group_policy_client.name }}"
+  register: group_policy_client
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    group_policy_client_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.group_policy_client.value | string == group_policy_client | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.1 Group Policy Client', "{{ hardening_requirements.windows_hardening.system_section.group_policy_client.value }}", "{{ group_policy_client }}", "{{ group_policy_client_results }}"]
+  delegate_to: localhost
+  
+#2.	IKE and AuthIP IPsec Keying Modules
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    ike_auth_modules: "{{ lookup('ini', 'IKEAUTHModules section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'IKEAUTHModules' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.ike_auth_modules.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.ike_auth_modules.name }}"
+  register: ike_auth_modules
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    ike_auth_modules_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.ike_auth_modules.value | string == ike_auth_modules | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.2 IKE and AuthIP IPsec Keying Modules', "{{ hardening_requirements.windows_hardening.system_section.ike_auth_modules.value }}", "{{ ike_auth_modules }}", "{{ ike_auth_modules_results }}"]
+  delegate_to: localhost
+  
+#3.	Network Location Awareness (NLASvc)
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    network_location_awareness: "{{ lookup('ini', 'NetworkLocation section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'NetworkLocation' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.network_location_awareness.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.network_location_awareness.name }}"
+  register: network_location_awareness
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    network_location_awareness_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.network_location_awareness.value | string == network_location_awareness | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.3 Network Location Awareness', "{{ hardening_requirements.windows_hardening.system_section.network_location_awareness.value }}", "{{ network_location_awareness }}", "{{ network_location_awareness_results }}"]
+  delegate_to: localhost
+  
+#4.		Windows Update
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    windows_update: "{{ lookup('ini', 'WindowsUpdate section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'WindowsUpdate' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.windows_update.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.windows_update.name }}"
+  register: windows_update
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    windows_update_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.windows_update.value | string == windows_update | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.4 Windows Update', "{{ hardening_requirements.windows_hardening.system_section.windows_update.value }}", "{{ windows_update }}", "{{ windows_update_results }}"]
+  delegate_to: localhost
+  
+#5.		Background Intelligent Transfer Service
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    background_intelligent_service: "{{ lookup('ini', 'BackgroundIntelligentService section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'BackgroundIntelligentService' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.background_intelligent_service.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.background_intelligent_service.name }}"
+  register: background_intelligent_service
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    background_intelligent_service_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.background_intelligent_service.value | string == background_intelligent_service | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.5 Background Intelligent Transfer Service', "{{ hardening_requirements.windows_hardening.system_section.background_intelligent_service.value }}", "{{ background_intelligent_service }}", "{{ background_intelligent_service_results }}"]
+  delegate_to: localhost
+  
+#6.		Base Filtering Engine
+- name: Retrieve current 'System Access' settings
+  set_fact:
+    base_filterning_engine: "{{ lookup('ini', 'BaseFilteringEngine section=System Access file=/tmp/{{ inventory_hostname }}_security_settings.ini') }}"
+   
+- name: Retrieve current setting of the 'BaseFilteringEngine' registry
+  win_reg_stat:
+    path: "{{ hardening_requirements.windows_hardening.system_section.base_filterning_engine.path }}"
+    name: "{{ hardening_requirements.windows_hardening.system_section.base_filterning_engine.name }}"
+  register: base_filterning_engine
+  
+- name: Check compliance for 'System' section
+  set_fact:
+    base_filterning_engine_results: "{{ 'Complaint' if hardening_requirements.windows_hardening.system_section.base_filterning_engine.value | string == base_filterning_engine | int else 'Non-Complaint' }}"
+    
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_ip_addresses[0] }},{{ ansible_date_time.date }},{{ item[0] }},{{ item[3] }} >> {{ host_csv_file }}"
+  loop:
+    - ['O.6 Base Filtering Engine', "{{ hardening_requirements.windows_hardening.system_section.base_filterning_engine.value }}", "{{ base_filterning_engine }}", "{{ base_filterning_engine_results }}"]
+  delegate_to: localhost
+#7.		COM+ Event System
+#8.		Computer Browser
+#9.		Cryptographic Services
+#10.		Distributed Link Tracking Client
+#11.		DNS Client
+#12.		Windows Event Log
+#13.		IPSEC Policy Agent
+#14.		Net Logon
+#15.		Network Connections
+#16.		Plug and Play
+#17.		Protected Storage (2008 and 2008R2 Only)
+#18.		Remote Procedure Call (RPC)
+#19.		Remote Registry
+#20.		Secondary Logon
+#21.		Security Accounts Manager
+#22.		Server
+#23.		System Event Notification Service
+#24.		TCP/IP NetBIOS Helper
+#25.		Terminal Services (2008) /
+#26. Remote Desktop Services (2008R2,2012R2,2016.2019)
+#27.		Windows Management Instrumentation
+#28.		Windows Time
+#29.		Workstation
+
+
+
+
+
+  
+

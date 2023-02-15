@@ -1,0 +1,89 @@
+---
+- name: Provisioning RHEL8 VM
+  hosts: localhost
+  gather_facts: false
+  
+  vars_prompt:
+    - name: vm_name
+      prompt: Enter the RHEL VM name
+      private: no
+      
+  tasks:
+    - name: include vars
+      include_vars:
+        dir: group_vars
+
+    - name: Clone a virtual machine from RHEL template and customize
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter_server }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: False
+        datacenter: "{{ datacenter_name }}"
+        cluster: "{{ cluster_name }}"
+        name: "{{ vm_name }}"
+        datastore: "{{ datastore }}"
+        folder: '/{{ datacenter_name }}/vm/CTC_RWS_ANSIBLE'
+        template: "{{ rhel_template }}"
+        state: poweredon
+        disk:
+        - size_gb: 40
+          type: thin
+        - size_gb: 5
+          type: thin
+        networks:
+        - name: "{{ network }}"
+          type: dhcp
+        wait_for_ip_address: yes
+      delegate_to: localhost
+      register: vm_info_rhel
+      
+    - name: IP address of the RHEL8 VM
+      ansible.builtin.debug:
+        msg: 
+        - "The IP of VM is {{ vm_info_rhel.instance.ipv4 }}"
+
+    - name: Adding host to dynamic inventory group
+      add_host:
+        hostname: '{{ vm_info_rhel.instance.ipv4 }}'
+        groups: rhel
+
+- hosts: rhel
+  become: yes
+  gather_facts: yes
+  vars:
+    - ansible_user: rhel84
+    - ansible_password: 1234567aA
+    - ansible_sudo_pass: 1234567aA
+    - ansible_python_interpreter: /usr/libexec/platform-python
+
+  tasks:
+    - name: Pinging RHEL VM
+      ping:
+
+    - name: Create a new primary partition with a size of 1GiB
+      community.general.parted:
+        device: /dev/sdb
+        number: 1
+        unit: GB
+        state: present
+        #part_start:
+        part_end: 100%
+
+    - name: Create a ext4 filesystem on /dev/sdb1 (formatting disk)
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/sdb1
+
+    - name: Create new directory for mounting
+      file:
+        path: /mnt/sdb1
+        state: directory
+        mode: '0755'
+
+    - name: Create mount to directory
+      ansible.posix.mount:
+        fstype: ext4
+        src: /dev/sdb1
+        path: /mnt/sdb1
+        state: mounted

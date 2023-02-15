@@ -1,0 +1,163 @@
+---
+- hosts: rhel_group
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Loading role
+      include_role:
+         name: "rhel_scan"
+      loop: "{{ user_select }}"
+      loop_control:
+        loop_var: section_num
+
+    - name: Find audit files
+      find:
+        paths: /tmp/
+        patterns: "^{{ inventory_hostname + '-' }}*"
+        use_regex: yes
+      register: files_located
+  
+    - name: Initialize an empty list for audit files
+      set_fact:
+        audit_file_list: []
+  
+    - name: Append to list of audit files
+      set_fact:
+        audit_file_list: "{{ audit_file_list + [files_located.files[item].path] }}"
+      loop: "{{ range(0, files_located.files | length) | list }}"
+      when: files_located.files | length | int > 0
+      register: testing
+
+    # - name: Send Email with audit files
+    #   mail:
+    #     host: smtp.gmail.com
+    #     port: 587
+    #     username: 
+    #     password: 
+    #     to:
+    #     subject: "{{ ansible_hostname }} Audit Report"
+    #     body: "{{ ansible_hostname }} has been audited. See attached report."
+    #     attach: "{{ audit_file_list }}"
+    #   when: files_located.files | length | int > 0
+      
+  #  - name: reading the csv files
+  #    read_csv:
+  #      path: "{{ files_located.files[item].path }}"
+  #    register: failure
+  #    loop: "{{ range(0, files_located.files | length) | list }}"
+  #    when: files_located.files | length | int > 0
+
+ #   - debug:
+  #      msg: "{{ item.IPAddress }}"
+  #    loop: "{{ failure.results[0].list }}"
+  #    when: item.Results == "No"
+  #    register: check
+
+ #   - debug: msg={{ check.results | map(attribute='item') | selectattr("Results", "equalto", "No") | map(attribute='IPAddress') | unique }}
+  #    register: noncompliant_targetmachines
+      
+ #   - name: Set result
+#      set_fact:
+ #       my_result: "{{ noncompliant_targetmachines.msg }}"
+
+#    - name: Adding target hosts to dynamic inventory group
+ #     add_host:
+ #       hostname: "{{ item }}"
+ #       group: "noncomplaint_machines"
+ #     with_items: "{{ noncompliant_targetmachines.msg }}"
+    
+    - name: Copying the CSV
+      copy:
+        src: "{{ files_located.files[item].path }}"
+        dest: /tmp/{{ inventory_hostname }}.csv
+        remote_src: yes
+      loop: "{{ range(0, files_located.files | length) | list }}"
+      when: files_located.files | length | int > 0
+      delegate_to: localhost
+      ignore_errors: yes
+    - name: Copying report to target machine
+      copy:
+        src: /tmp/{{ inventory_hostname }}.csv
+        dest: \\10.30.23.131\tmp
+      delegate_to: localhost
+      ignore_errors: yes
+      
+    - name: converting to html
+      template:
+        src: ./report.html.j2
+        dest: /tmp/{{ ansible_facts['hostname'] }}.html
+       # loop: "{{ range(0, csv_files_located.files | length) | list }}"
+       # when: csv_files_located.files | length | int > 0
+      delegate_to: localhost
+      ignore_errors: yes
+    - name: Copying report to target machine
+      copy:
+        src: /tmp/{{ ansible_facts['hostname'] }}.html
+        dest: /opt/
+  #    delegate_to: localhost
+      ignore_errors: yes
+ #   - name: Cleanup audit files
+ #     file:
+ #       path: "{{ files_located.files[item].path }}"
+ #       state: absent
+ #     loop: "{{ range(0, files_located.files | length) | list }}"
+ #     when: files_located.files | length | int > 0
+      
+#- hosts: noncomplaint_machines
+#  gather_facts: true
+#  become: yes
+#  vars_files:
+ #   - ./group_vars/all.yml
+  
+#  tasks:  
+#    - name: RHEL Baseline Remediation
+#      include_role:
+#        name: "rhel_remediation"
+#      when: "'yes' in remediation_task"
+  
+ #   - name: Loading role
+ #     include_role:
+ #         name: "rhel_scan"
+ #     loop: "{{ user_select }}"
+ #     loop_control:
+ #       loop_var: section_num
+ #     when: "'yes' in remediation_task"
+
+#    - name: Find audit files
+#      find:
+#        paths: /tmp/
+#        patterns: "^{{ inventory_hostname + '-' }}*"
+#        use_regex: yes
+#      register: files_located
+#      when: "'yes' in remediation_task"
+  
+ #   - name: Initialize an empty list for audit files
+ #     set_fact:
+#        audit_file_list: []
+#      when: "'yes' in remediation_task"
+  
+ #   - name: Append to list of audit files
+ #     set_fact:
+ #       audit_file_list: "{{ audit_file_list + [files_located.files[item].path] }}"
+#      loop: "{{ range(0, files_located.files | length) | list }}"
+#      when: files_located.files | length | int > 0
+#      register: testing
+#      when: "'yes' in remediation_task"
+
+#    - name: Copying the CSV report after remediation
+#      copy:
+#        src: "{{ files_located.files[item].path }}"
+##        dest: /media/
+ #       remote_src: yes
+ #     loop: "{{ range(0, files_located.files | length) | list }}"
+ #     when: files_located.files | length | int > 0
+ #     when: "'yes' in remediation_task"
+    
+#    - name: Cleanup audit files
+#      file:
+#        path: "{{ files_located.files[item].path }}"
+#        state: absent
+#      loop: "{{ range(0, files_located.files | length) | list }}"
+#      when: files_located.files | length | int > 0
+#      when: "'yes' in remediation_task"

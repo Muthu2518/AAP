@@ -1,0 +1,1067 @@
+<!DOCTYPE html>  
+<!--<html xmlns="http://www.w3.org/1999/xhtml"> -->
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <div align="center"><h1><b> Scanning Report</b></h1></div>  
+    <table border="5" width="100%" height="100%"> 
+        <tr>
+            <td>Project</td>
+            <td>AAP</td>
+        </tr>
+        <tr>
+            <td>Environment</td>
+            <td>UAT</td>
+        </tr>
+        <tr>
+            <td>Server OS</td>
+            <td>2012</td>
+        </tr>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>A.</td> 
+            <td>Account</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Rename built-in “Administrator”</td>
+            <td>No</td>  
+            <td></td>    
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Seal and store built-in local administrator account rights in Item A.1 into PAPM system</td>
+            <td>No</td>  
+            <td> </td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Create a dummy “Administrator” account with Normal User rights</td>
+            <td>No</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Disable “Guest” account </td>
+            <td>No</td>  
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Disable or remove all unnecessary accounts from the system</td>
+            <td>No</td>  
+            <td></td> 
+            <td></td>
+        </tr>   
+    </table>  
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>B.</td> 
+            <td>Password</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Prompt user to change password in 14 days</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Set enforce password history to 5</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Set max password age to 90 days</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Set min password age to 1 day</td>
+            <td>Yes</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Set min password age to 1 day</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Set meet complexity requirement to Enabled</td> 
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Set password using reversible encryption: Disabled</td> 
+            <td>Yes</td>  
+            <td>
+              <h:form>
+              <p:column headerText="Result">
+                <h:outputText value="#{clear_text_password_results}" />
+              </p:column>
+              </h:form></td> 
+              <td></td>
+        </tr>
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>C.</td> 
+            <td>Account Lockout</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Set lockout duration to 30 minutes</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Set lockout threshold to 5 invalid attempts</td>
+            <td>Yes</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Set reset lockout counter to 30 minutes</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+    </table>
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>D.</td> 
+            <td>Logging Section</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Set maximum Application log size to 100 mb</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Set maximum Security log size to 50 mb</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Set maximum System log size to 50 mb</td>
+            <td>Yes</td>  
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Set retain method for Application log to As Needed</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Set retain method for Security log to As Needed</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Set retain method for System log to As Needed</td> 
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>E.</td> 
+            <td>Auditing Section</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Account Logon Events</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Account Management</td>
+            <td>Yes</td>  
+            <td> </td>   
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Directory Service Access</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Logon Events</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Object Access</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Policy Change</td> 
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Privilege Use</td> 
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>8.</td>
+            <td>Process Tracking</td> 
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>9.</td>
+            <td>System Events</td> 
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>F.</td> 
+            <td>File system section</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+            <td></td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>NTFS for all files system</td>
+            <td>No</td>  
+            <td>NA</td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Replace “Everyone” group to “Authenticated Users” on all drives</td>
+            <td>No</td>  
+            <td>NA</td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+            <td>No</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+            <td>No</td>  
+            <td>NA</td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Ensure the permission rights to folder For Windows Servers 32-bit 64-bit</td>
+            <td>No</td>  
+            <td>NA</td>
+            <td></td>
+        </tr>
+        </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>G.</td> 
+            <td>Network</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Disable unused Windows network connections</td>
+            <td>No</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Permanently remove the default admin shares </td>
+            <td>No</td>  
+            <td> </td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Restrict anonymous access via null session</td>
+            <td>No</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>List down and verify all shared folder</td>
+            <td>No</td>  
+            <td> </td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Configure NTP service </td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Disable storing of LAN Manager hash value on next password</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body> 
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>H.</td> 
+            <td>Registry Fixes </td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Hiding the Last Logged On Username in the Logon Dialog</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Enable Password protected screen saver</td>
+            <td>Yes</td>  
+            <td> </td>
+            <td></td>
+        </tr> 
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>I.</td> 
+            <td>Security Options</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Disable Allow System to be shut down without having to logon</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Enable audit use of backup and restore privilege</td>
+            <td>Yes</td>  
+            <td> </td>  
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>3.</td>  
+            <td>Enable Ctrl-Alt-Del requirement during logon</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>4.</td>  
+            <td>Enable prevent administrator from installing printer drivers</td>
+            <td>Yes</td>  
+            <td> </td> 
+            <td></td>
+        </tr> 
+        <tr>  
+            <td>5.</td>  
+            <td>Enable restrict CD-ROM access to locally logged-on user only</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>
+            <td>6.</td>
+            <td>Set only Administrators to load and unload device drivers</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>7.</td>
+            <td>Set only Authenticated Users to add workstations to domain</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>8.</td>
+            <td>Set only Administrators to adjust memory quotas for a process</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>9.</td>
+            <td>Set only LOCAL SERVICE NETWORK SERVICE Administrators to generate security audits</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>10.</td>
+            <td>Set only LOCAL SERVICE NETWORK SERVICE to replace a process level token unless specially required</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>11.</td>
+            <td>Set only Administrators to remove computer from docking station</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>12.</td>
+            <td>Enable strengthen default permissions of global system objects</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>13.</td>
+            <td>Set User must enter a password each time they use a key in System Cryptography</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>14.</td>
+            <td>Enable domain members to use strong session key</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>15.</td>
+            <td>Prevent Stored User Names and Passwords from storing passwords and credentials</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>16.</td>
+            <td>Restrict users from accessing a computer over a network</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>17.</td>
+            <td>Restrict users from accessing a computer over a network</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>18.</td>
+            <td>Restrict users and groups from logging in as a Terminal Service clients</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>19.</td>
+            <td>Set only Administrators to allow process to impersonate any user without authentication</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>20.</td>
+            <td>Set only Administrators to shut down the operating system</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>21.</td>
+            <td>Set only Administrators Backup Operators Power Users to allow log on locally to the operating system</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>22.</td>
+            <td>Set only Administrators and Backup Operators to allow backup files and directories on OS</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>23.</td>
+            <td>Remove all user and computer object rights to be Trusted for Delegation</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>24.</td>
+            <td>Remove all user rights to shut down a computer from a remote location on the network</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>
+            <td>25.</td>
+            <td>Set only Administrators to access auditing options for individual resources</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>J.</td> 
+            <td>Simple Network Management Protocol</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Enable SNMP settings</td>
+            <td>No</td>  
+            <td>NA</td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>K.</td> 
+            <td>TCP/IP Registry Tightening</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Set value to disable on Enable ICMPRedirect</td>
+            <td>No</td>  
+            <td></td>    
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Disable IP forwarding</td>
+            <td>No</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>M.</td> 
+            <td>Windows Logon Banner</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Windows text logon banner</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>Windows title logon banner</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>N.</td> 
+            <td>Antivirus Software</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Install antivirus software and run automatically in the background</td>
+            <td>No</td>  
+            <td>NA</td>  
+            <td></td>
+        </tr>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>O.</td> 
+            <td>System Services Baseline windows default service 'Enabled'</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Group Policy Client</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>IKE and AuthIP IPsec Keying Modules</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Network Location Awareness</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Windows Update</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Background Intelligent Transfer Service</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Base Filtering Engine</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>COM and Event System</td>
+            <td>Yes</td>  
+            <td></td>     
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Cryptographic Services</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Distributed Link Tracking Client</td>
+            <td>Yes</td>  
+            <td></td>    
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>ODNS Client</td>
+            <td>Yes</td>  
+            <td></td>     
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Windows Event Log</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>IPSEC Policy Agent</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Net Logon</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Network Connections</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Plug and Play</td>
+            <td>Yes</td>  
+            <td></td>     
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Protected Storage 2008 and 2008R2 Only</td>
+            <td>Yes</td>  
+            <td>NA</td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Remote Procedure Call</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>19.</td>  
+            <td>Remote Registry</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>20.</td>  
+            <td>Secondary Logon</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>21.</td>  
+            <td>Security Accounts Manager</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>22.</td>  
+            <td>Server</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>23.</td>  
+            <td>System Event Notification Service</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>24.</td>  
+            <td>TCP and IP NetBIOS Helper</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>25.</td>  
+            <td>Terminal Services</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>26.</td>  
+            <td>Windows Management Instrumentation</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>27.</td>  
+            <td>Windows Time</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>28.</td>  
+            <td>Workstation</td>
+            <td>Yes</td>  
+            <td></td>      
+            <td></td>
+        </tr>
+    </table>  
+</body>
+<head>  
+    <title></title>  
+</head>  
+<body>  
+    <table border="1" width="100%" height="100%">  
+        <tr> 
+            <td>P.</td> 
+            <td>System Services Baseline windows default service 'Disabled'</td>  
+            <td>Policy through group policy</td>
+            <td>Result</td>
+            <td>Remarks</td>
+        </tr>  
+        <tr>  
+            <td>1.</td>  
+            <td>Internet Connection Sharing</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>2.</td>  
+            <td>SSDP Discovery</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>3.</td>  
+            <td>Windows Audio Endpoint Builder</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>4.</td>  
+            <td>Windows Error Reporting Service</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>5.</td>  
+            <td>Application Layer Gateway Service</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>6.</td>  
+            <td>Application Management</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>7.</td>  
+            <td>Human Interface Device Access</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>8.</td>  
+            <td>Print Spooler</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>9.</td>  
+            <td>Remote Access Auto Connection Manager</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>10.</td>  
+            <td>Remote Access Connection Manager</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>11.</td>  
+            <td>Resultant Set of Policy Provider</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>12.</td>  
+            <td>Routing and Remote Access</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>13.</td>  
+            <td>Shell Hardware Detection</td>
+            <td>Yes</td>  
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>  
+            <td>14.</td>  
+            <td>Smart Card</td>
+            <td>Yes</td>  
+            <td></td>   
+            <td></td>
+        </tr>
+        <tr>  
+            <td>15.</td>  
+            <td>Special Administration Console Helper</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>16.</td>  
+            <td>Telephony</td>
+            <td>Yes</td>  
+            <td></td> 
+            <td></td>
+        </tr>
+        <tr>  
+            <td>17.</td>  
+            <td>Themes</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+        <tr>  
+            <td>18.</td>  
+            <td>Windows Audio</td>
+            <td>Yes</td>  
+            <td></td>  
+            <td></td>
+        </tr>
+    </table>  
+</body>
+</html>

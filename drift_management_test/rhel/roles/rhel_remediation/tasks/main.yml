@@ -1,0 +1,12 @@
+---
+- name: Enforce ntp.conf
+  template:
+    src: roles/rhel_remediation/templates/ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  register: ntp_conf
+  notify:
+    - "restart ntpd services"

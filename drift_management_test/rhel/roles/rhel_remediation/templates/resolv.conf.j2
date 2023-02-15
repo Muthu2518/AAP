@@ -1,0 +1,2719 @@
+# {{ ansible_managed }}
+#search opensource.com
+#nameserver 192.168.1.1
+#nameserver 192.168.1.2
+#nameserver 10.20.10.30
+#nameserver 10.20.10.31
+#Hardening RHEL
+
+#DESCRIPTION: RHEL Hardening Script version 1.0
+#Configure File Systems
+echo
+echo "Beginning hardening procedure.."
+echo
+
+sleep 5
+echo 
+echo "Checking if leftovers exist from a previous run.."
+echo
+if ls /root/harden.log 1> /dev/null 2>&1; then 
+	echo 
+	echo "Previous run log exists.. backing up to /root/harden.log.bkp"
+	echo 
+	mv /root/harden.log /root/harden.bkp
+	echo
+	echo "Backup complete!"
+	echo
+	echo
+	echo "Creating new log file @ /root/harden.log"
+	echo
+	touch /root/harden.log
+	chmod 600 /root/harden.log
+	echo
+	echo "New log file creation complete.. continuing.."
+	echo
+else
+	echo
+	echo "Not run previously.."
+	echo "Creating new log file @ /root/harden.log"
+	echo
+	touch /root/harden.log
+	chmod 600 /root/harden.log
+	echo
+	echo "Log file creation complete.. continuing.."
+	echo
+fi
+
+
+echo 
+echo "Blacklisting unnecessary filesystems"
+echo 
+
+# Create file for blacklisting of unnecessary filesystems if it does not exist and ignore if it already does - E 1-8
+
+echo 
+echo "Creating blacklist file CIS.conf.."
+echo
+
+if ls /etc/modprobe.d/CIS.conf 1> /dev/null 2>&1; then 
+	echo
+	echo "File /etc/modprobe.d/CIS.conf already exists.. skipping creation of file again" | tee -a /root/harden.log
+	echo
+else
+	touch /etc/modprobe.d/CIS.conf 
+	echo 
+	echo "Blacklist file created"
+	echo """"""""
+fi
+
+# A. Account
+
+# Setting default group for the root account is GID 0 - A 4
+
+echo "Ensuring default group for the root account is GID 0"
+usermod -g 0 root
+echo
+echo "GID is set correctly to 0"
+
+# Setting umask to 027 in /etc/bashrc and /etc/profile - A 5
+
+	echo
+        echo    "Backing up /etc/bashrc & /etc/profile to /etc/bashrc.bkp and /etc/profile.bkp respective"
+        echo
+		cp -f /etc/bashrc /etc/bashrc.bkp
+		cp -f /etc/profile /etc/profile.bkp
+	echo
+        echo    "Backup of these files is completed"
+        echo
+        echo
+        echo    "Ensuring umask is set to 027 for all user accounts in the system via these two files"
+        echo
+if [[ -z `egrep -e "027" /etc/profile 2> /dev/null 2>&1` ]]; then
+	sed -i 's/\<umask 0.*\>/umask 027/g' /etc/bashrc
+	sed -i 's/\<umask 0.*\>/umask 027/g' /etc/profile
+	echo
+	echo	"Umask set correctly to 027"
+	echo
+else
+	echo	
+	echo	"Umask already set to 027" | tee -a /root/harden.log
+	echo
+fi
+
+# Restricting access to su command - A- 7
+
+	echo
+        echo    "Setting su command restrictions in pam for su!"
+        echo
+        sed -i '/auth		required	pam_wheel.so use_uid/s/^#//g' /etc/pam.d/su
+	echo    
+        echo    "Su command restrictions set correctly in pam for su!"
+        echo
+
+# B. Password
+
+# Setting login.defs for MAX & MIN DAYS for password change
+
+	echo
+	echo	"Backing up /etc/login.defs to /etc/login.defs.bkp"
+	echo
+		cp -f /etc/login.defs /etc/login.defs.bkp
+	echo
+	echo	"Backup of this file is completed"
+	echo
+	echo
+	echo	"Ensuring password min/max days before expiry are set correctly"
+	echo
+sed -i '25s/.*/PASS_MAX_DAYS   90/' /etc/login.defs
+sed -i '26s/.*/PASS_MIN_DAYS  7/' /etc/login.defs
+sed -i '26s/.*/PASS_WARN_AGE   14/' /etc/login.defs
+sed -i '27s/.*/PASS_MIN_LEN 8/' /etc/login.defs
+	echo
+	echo	"Password min/max days enforced correctly"
+	echo
+# useradd -D -f 35
+
+#Ensure password hashing algorithm is SHA-512
+#Ensuring that password reuse is limited in password-auth
+echo	
+        echo    "Checking to ensure password reuse is limited in password-auth"
+        echo
+if [[ -z `egrep -e "remember=5" /etc/pam.d/password-auth 2> /dev/null 2>&1` ]]; then
+        echo
+        echo    "Warning.. password reuse rules not set in password-auth" | tee -a /root/harden.log
+        echo
+        echo
+        echo    "Fixing this problem!"
+        echo
+sed -i '/password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok/s/$/ remember=5/' /etc/pam.d/password-auth
+	echo    
+        echo    "Password reuse rules set correctly in password-auth!"
+        echo
+else
+        echo
+        echo    "Password reuse rules are already in effect in password-auth!" | tee -a /root/harden.log
+        echo
+fi
+
+# Ensuring that password reuse is limited in system-auth
+	echo	
+        echo    "Checking to ensure password reuse is limited in system-auth"
+        echo
+if [[ -z `egrep -e "remember=5" /etc/pam.d/system-auth 2> /dev/null 2>&1` ]]; then
+        echo
+        echo    "Warning.. password reuse rules not set in system-auth" | tee -a /root/harden.log
+        echo
+        echo
+        echo    "Fixing this problem!"
+        echo
+sed -i '/password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok/s/$/ remember=5/' /etc/pam.d/system-auth
+	echo    
+        echo    "Password reuse rules set correctly in system-auth!"
+        echo
+else
+        echo
+        echo    "Password reuse rules are already in effect in system-auth!" | tee -a /root/harden.log
+        echo
+fi
+
+#B-7 -Ensure all users last password change date is in the past
+
+echo
+echo "ensuring all users last password change date is in past"
+
+for usr in $(cut -d: -f1 /etc/shadow); do [[ $(chage --list $usr | grep '^Last password change' | cut -d: -f2) > $(date) ]] && echo "$usr :$(chage --list $usr | grep '^Last password change' | cut -d: -f2)"; done
+
+echo
+echo "users last password change date is in the past"
+
+#B -6 Set meet complexity requirement (contain chars of at least 3 of groups: Uppercase; Lowercase; Numerals; Symbols) to Enabled
+echo
+	echo	"Backing up /etc/security/pwquality.conf to /etc/security/pwquality.conf.bkp"
+	echo	
+	cp -f /etc/security/pwquality.conf /etc/security/pwquality.conf.bkp
+	echo
+	echo	"Backup of pwquality.conf complete"
+	echo
+	echo
+	echo	"Setting pwquality rules!"
+	echo
+	sed -e '/minlen/ s/^#*/#/' -i /etc/security/pwquality.conf
+        sed -e '/minclass/ s/^#*/#/' -i /etc/security/pwquality.conf
+	sed -e '/dcredit/ s/^#*/#/' -i /etc/security/pwquality.conf
+        sed -e '/ucredit/ s/^#*/#/' -i /etc/security/pwquality.conf
+	sed -e '/ocredit/ s/^#*/#/' -i /etc/security/pwquality.conf
+	sed -e '/lcredit/ s/^#*/#/' -i /etc/security/pwquality.conf
+
+	echo "minlen=8" >>/etc/security/pwquality.conf
+        echo "minclass=3" >>/etc/security/pwquality.conf
+	echo "dcredit=-1" >>/etc/security/pwquality.conf 
+	echo "ucredit=-1" >>/etc/security/pwquality.conf
+	echo "ocredit=-1" >>/etc/security/pwquality.conf
+	echo "lcredit=-1" >>/etc/security/pwquality.conf
+	echo
+	echo	"Pwquality rules set correctly!"
+	echo
+
+# Account Lockout
+
+# Setting faillock in password-auth!
+
+echo
+        echo    "Setting faillock rules in password-auth!"
+        echo
+if [[ -z `egrep -e "faillock.so" /etc/pam.d/password-auth 2> /dev/null 2>&1` ]]; then
+        echo
+        echo    "Warning.. faillock rules not set in password-auth" | tee -a /root/harden.log
+        echo
+        echo
+        echo    "Fixing this problem!"
+        echo
+sed -i '/auth        required      pam_deny.so/a \
+auth        required      pam_faillock.so preauth silent audit deny=5 unlock_time=1800 \
+auth [success=1 default=ignore] pam_succeed_if.so user in root:root1:drctrlid:epv_adm:pvt \
+auth        [default=die] pam_faillock.so authfail audit deny=3 \
+auth        sufficient     pam_faillock.so authsucc audit deny=3' /etc/pam.d/password-auth
+	echo
+        echo    "Faillock rules set correctly in password-auth!"
+        echo
+else
+        echo
+        echo    "Faillock rules are already in effect in password-auth!" | tee -a /root/harden.log
+        echo
+fi
+
+# Setting faillock in system-auth!
+
+echo
+        echo    "Setting faillock rules in system-auth!"
+        echo
+if [[ -z `egrep -e "faillock.so" /etc/pam.d/system-auth 2> /dev/null 2>&1` ]]; then
+        echo
+        echo    "Warning.. faillock rules not set in system-auth" | tee -a /root/harden.log
+        echo
+        echo
+        echo    "Fixing this problem!"
+        echo
+sed -i '/auth        required      pam_deny.so/a \
+auth        required      pam_faillock.so preauth silent audit deny=5 unlock_time=1800 \
+auth [success=1 default=ignore] pam_succeed_if.so user in root:root1:drctrlid:epv_adm:pvt \
+auth        [default=die] pam_faillock.so authfail audit deny=3 \
+auth        sufficient     pam_faillock.so authsucc audit deny=3' /etc/pam.d/system-auth	
+	echo	
+        echo    "Faillock rules set correctly in system-auth!"
+        echo
+else
+        echo
+        echo    "Faillock rules are already in effect in system-auth!" | tee -a /root/harden.log
+        echo
+fi
+
+# D-4-11 System File Permissions
+
+# Setting permissions on passwd, group and shadow files
+
+echo
+echo "Setting permissions on passwd, group and shadow files"
+echo
+chown root:root /etc/passwd
+chmod 644 /etc/passwd
+chown root:root /etc/shadow
+chmod 000 /etc/shadow
+chown root:root /etc/group
+chmod 644 /etc/group
+chown root:root /etc/gshadow
+chmod 000 /etc/gshadow
+chown root:root /etc/passwd-
+chmod 600 /etc/passwd-
+chown root:root /etc/shadow-
+chmod 600 /etc/shadow-
+chown root:root /etc/group-
+chmod 600 /etc/group-
+chown root:root /etc/gshadow-
+chmod 600 /etc/gshadow-
+echo 
+echo "Done! :@"
+echo
+
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002 > 6-1-9.txt
+chmod o-w $(<6-1-9.txt)
+
+
+cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have apassword "}' > 6-2-1.txt
+passwd -l $(<6-2-1.txt)
+#6.2.2
+sed -i '/+/d'  /etc/passwd
+#6.2.3
+sed -i '/+/d'  /etc/shadow
+#6.2.4
+sed -i '/+/d'  /etc/group
+
+
+cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
+  if [ $uid -ge 1000 -a ! -d "$dir" -a $user != "nfsnobody" ]; then
+        mkdir "$dir"
+    chown $user:$user $dir
+  fi
+done
+
+cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
+  if [ $uid -ge 1000 -a -d "$dir" -a $user != "nfsnobody" ]; then
+  owner=$(stat -L -c "%U" "$dir")
+    if [ "$owner" != "$user" ]; then
+    chown $user:$user $dir
+    fi
+  fi
+done
+
+# E 1-8 File System Configuration
+
+echo
+echo "Checking if a filesystem exists before adding to the blacklist"
+
+if [[ $(lsmod | grep cramfs) ]]; then
+	echo "install cramfs /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep freevxfs) ]]; then
+	echo "install freevxfs /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep jffs2) ]]; then
+	echo "install jffs2 /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep hfs) ]]; then
+	echo "install hfs /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep hfsplus) ]]; then
+	echo "install hfsplus /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep squashfs) ]]; then
+	echo "install squashfs /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+if [[ $(lsmod | grep udf) ]]; then
+	echo "install udf /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+# Exception made to allow vfat
+
+if [[ $(lsmod | grep vfat) ]]; then
+	echo "install vfat /bin/true" >> /etc/modprobe.d/CIS.conf 
+else
+	:
+fi
+
+echo
+echo "Unnecessary filesystems blacklisted successfully!"
+echo
+
+# E-9-12 Ensure systemd is mounting /tmp
+
+if [[ $(mount | grep /tmp) ]]; then
+	:
+else
+	echo
+	echo "WARNING! Dedicated /tmp does not exist!" | tee -a /root/harden.log
+	echo
+fi
+systemctl unmask tmp.mount
+systemctl enable tmp.mount &> /dev/null
+	echo
+	echo "Creating file /etc/systemd/system/local-fs.target.wants/tmp.mount.."
+	echo
+if ls /etc/systemd/system/local-fs.target.wants/tmp.mount 1> /dev/null 2>&1; then 
+	echo
+	echo "File /etc/systemd/system/local-fs.target.wants/tmp.mount already exists.. skipping creation of file again" | tee -a /root/harden.log
+	echo
+else
+	touch /etc/systemd/system/local-fs.target.wants/tmp.mount
+cat <<EOT > /etc/systemd/system/local-fs.target.wants/tmp.mount
+[Mount]
+What=temps
+Where=/tmp
+Type=temps
+Options=mode=1777,strictatime,noexec,nodev,nosuid
+EOT
+	echo
+	echo "File created. Do not be alarmed if you see that it already exists.. this is normal"
+	echo
+fi
+
+#echo
+#echo "Checking if main partitions are proper devices.."
+#echo
+
+# Check if /var/log/audit is mounted as a separate partition
+
+#if mount -t "$(grep -v '^nodev' /proc/filesystems | cut -f2 | paste -s -d ,)" | grep /var/log/audit 1> /dev/null 2>&1; #then 
+#	echo "/var/log/audit exists" | tee -a /root/harden.log
+#else 
+#	echo "/var/log/audit does not exist as a physical or lvm drive partition" | tee -a /root/harden.log 
+#fi
+
+# Check if /var is mounted as a separate partition
+
+#if mount -t "$(grep -v '^nodev' /proc/filesystems | cut -f2 | paste -s -d ,)" | grep /var 1> /dev/null 2>&1; then 
+#	echo "/var exists" | tee -a /root/harden.log
+#else 
+#	echo "/var does not exist as a physical or lvm drive partition" | tee -a /root/harden.log 
+#fi
+# Check if /var/log is mounted as a separate partition 
+
+#if mount -t "$(grep -v '^nodev' /proc/filesystems | cut -f2 | paste -s -d ,)" | grep /var/log 1> /dev/null 2>&1; then 
+#	echo "/var/log exists" | tee -a /root/harden.log
+#else 
+#	echo "/var/log does not exist as a physical or lvm drive partition" | tee -a /root/harden.log 
+#fi
+
+# Check if /var/log/audit is mounted as a separate partition
+#
+#if mount -t "$(grep -v '^nodev' /proc/filesystems | cut -f2 | paste -s -d ,)" | grep /var/log/audit 1> /dev/null 2>&1; #then 
+#	echo "/var/log/audit exists" | tee -a /root/harden.log
+#else 
+#	echo "/var/log/audit does not exist as a physical or lvm drive partition" | tee -a /root/harden.log 
+#fi
+# Check if /home is mounted as a separate partition
+
+#if mount -t "$(grep -v '^nodev' /proc/filesystems | cut -f2 | paste -s -d ,)" | grep /home 1> /dev/null 2>&1; then 
+#	echo "/home exists" | tee -a /root/harden.log
+#else 
+#	echo "/home does not exist as a physical or lvm drive partition" | tee -a /root/harden.log 
+#fi
+#
+#echo
+#echo "Check is completed! Check /root/harden.log for results.."
+#echo
+
+# E -19-Check to ensure that are no world writable files and/or folders and if there are, set the sticky bit on them
+
+echo 
+echo "Checking for world writable files and/or folders.."
+echo
+world=$(df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null)
+if [ -z "$world" ]; then
+	echo
+	echo "No world writable files and/or folders exist.."
+	echo
+else
+	echo
+	echo "World writable files and/or folders exist!!"
+	echo
+	echo
+	echo "Writing information on world writable files and/or folders into /root/world.log" 
+	if ls /root/world.log 1> /dev/null 2>&1; then
+		echo
+        	echo "Previous world.log exists.. backing up to /root/world.log.bkp"
+		echo
+		mv /root/world.log /root/world.log.bkp
+        	echo
+		echo "Backup complete!"
+		echo
+		echo
+		echo "Creating new world.log file @ /root/world.log"
+        	echo
+		touch /root/world.log
+        	chmod 600 /root/world.log
+		echo $world > /root/world.log
+		echo
+       		echo "New world.log file creation complete.. continuing.."
+		echo "Written information on world writable files and/or folders into /root/world.log"	
+		echo
+			else
+				echo
+				echo "No previous world.log exists.."
+				echo "Creating world.log.."
+				echo $world > /root/world.log
+				echo "Creation complete!"
+				echo
+				echo "Written information on world writable files and/or folders into /root/world.log"
+				echo
+				echo "Setting sticky bit on these world writable folders that were discovered.."
+				df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+				echo
+				echo "Done!"
+				echo	
+	fi	
+fi 
+
+#Ensure separate partition exists for /tmp
+
+if [[ $(mount | grep /tmp) ]]; then
+	:
+else
+	echo
+	echo "WARNING! Dedicated /tmp does not exist!" | tee -a /root/harden.log
+	echo
+fi
+systemctl unmask tmp.mount
+systemctl enable tmp.mount &> /dev/null
+	echo
+	echo "Creating file /etc/systemd/system/local-fs.target.wants/tmp.mount.."
+	echo
+if ls /etc/systems/system/local-fs.target.wants/tmp.mount 1> /dev/null 2>&1; then 
+	echo
+	echo "File /etc/systemd/system/local-fs.target.wants/tmp.mount already exists.. skipping creation of file again" | tee -a /root/harden.log
+	echo
+else
+	touch /etc/systemd/system/local-fs.target.wants/tmp.mount
+cat <<EOT > /etc/systemd/system/local-fs.target.wants/tmp.mount
+[Mount]
+What=tmpfs
+Where=/tmp
+Type=tmpfs
+Options=mode=1777,strictatime,noexec,nodev,nosuid
+EOT
+	echo
+	echo "File created. Do not be alarmed if you see that it already exists.. this is normal"
+	echo
+fi
+
+echo
+echo "Checking if main partitions are proper devices.."
+echo
+
+
+# Ensuring autofs is disabled
+
+echo
+echo "Disabling autofs service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep autofs 1> /dev/null 2>&1; then 
+	systemctl disable autofs
+else 
+	echo
+	echo "Service autofs is already disabled or not present.."
+	echo
+fi
+
+# E-21 Ensure AIDE is installed
+
+echo "Checking to make sure AIDE is installed.."
+echo
+if [[ -z `rpm -qa aide` ]]; then
+echo
+echo "AIDE is not installed!!"
+echo
+echo "Installing now!!"
+echo
+yum -y install aide
+sleep 3
+else
+echo
+echo "AIDE has been installed successfully" | tee -a /root/harden.log
+echo
+fi
+echo "Initializing AIDE.."
+aide --init
+echo
+echo "AIDE has been initialized successfully" | tee -a /root/harden.log
+echo
+
+
+# F. Network 
+
+#F-1 Ensuring ipv4 forwarding is disabled
+
+echo
+echo "Setting ip forwarding to disable.." 
+echo
+if [[ -z `egrep -e "net.ipv4.ip_forward = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.ip_forward = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting ip forwarding to disable"
+        echo
+else
+        echo 
+        echo "Ip forwarding already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+#F-2 Ensuring packet redirect sending is disabled
+
+echo
+echo "Setting packet redirect sending to disable.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.send_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.send_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all redirects to disable"
+        echo
+else
+        echo 
+        echo "All redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+if [[ -z `egrep -e "net.ipv4.conf.default.send_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.send_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default redirects to disable"
+        echo
+else
+        echo 
+        echo "Default redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+#F-3 Ensuring source routed packets are not accepted
+
+echo
+echo "Setting all source routed packets to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.accept_source_route = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.accept_source_route = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all accept source routed packets to disabled"
+        echo
+else
+        echo 
+        echo "All accept source routed packets already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default source routed packets to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.default.accept_source_route = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.accept_source_route = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default accept source routed packets to disabled"
+        echo
+else
+        echo 
+        echo "Default accept source routed packets already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+#F-4 Ensuring ICMP redirects are not accepted
+
+echo
+echo "Setting all ICMP redirects to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.accept_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.accept_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all ICMP redirects to disabled"
+        echo
+else
+        echo 
+        echo "All ICMP redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default ICMP redirects to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.default.accept_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.accept_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default ICMP redirects to disabled"
+        echo
+else
+        echo 
+        echo "Default ICMP redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+#F-5 Ensuring secure ICMP redirects are not accepted
+
+echo
+echo "Setting all secure ICMP redirects to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.secure_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.secure_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all secure ICMP redirects to disabled"
+        echo
+else
+        echo 
+        echo "All secure ICMP redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default secure ICMP redirects to reject.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.default.secure_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.secure_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default secure ICMP redirects to disabled"
+        echo
+else
+        echo 
+        echo "Default secure ICMP redirects already exists in sysctl.conf and is set to be disabled" | tee -a /root/harden.log
+        echo
+fi
+#F-6 Ensuring suspicious packets are logged
+
+echo
+echo "Setting all suspicious packets to be logged.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.log_martians = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.log_martians = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all suspicious packets to be logged"
+        echo
+else
+        echo 
+        echo "All suspicious packets logging already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default suspicious packets to be logged.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.default.log_martians = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.log_martians = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default suspicious packets to be logged"
+        echo
+else
+        echo 
+        echo "Default suspicious packets logging already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+#F-7 Ensuring broadcast ICMP requests are ignored
+
+echo
+echo "Setting broadcast ICMP requests to be ignored.." 
+echo
+if [[ -z `egrep -e "net.ipv4.icmp_echo_ignore_broadcasts = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting broadcast ICMP requests to be inored"
+        echo
+else
+        echo 
+        echo "Broadcast ICMP request ignoring already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+#F-8 Ensuring bogus ICMP requests are ignored
+
+echo
+echo "Setting bogus ICMP requests to be ignored.." 
+echo
+if [[ -z `egrep -e "net.ipv4.icmp_ignore_bogus_error_responses = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting bogus ICMP requests to be inored"
+        echo
+else
+        echo 
+        echo "Bogus ICMP request ignoring already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+#F-9 Ensuring reverse path filtering is enabled
+
+echo
+echo "Setting all reverse path filtering to be enabled.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.all.rp_filter = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.all.rp_filter = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all reverse path filtering to be enabled"
+        echo
+else
+        echo 
+        echo "All reverse path filtering already exists in sysctl.conf and is enabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default reverse path filtering to be enabled.." 
+echo
+if [[ -z `egrep -e "net.ipv4.conf.default.rp_filter = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.conf.default.rp_filter = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default reverse path filtering to be enabled"
+        echo
+else
+        echo 
+        echo "Default reverse path filtering already exists in sysctl.conf and is enabled" | tee -a /root/harden.log
+        echo
+fi
+#F-10 Ensuring TCP SYN cookies are enabled
+
+echo
+echo "Setting TCP SYN cookies to be enabled.." 
+echo
+if [[ -z `egrep -e "net.ipv4.tcp_syncookies = 1" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv4.tcp_syncookies = 1" >> /etc/sysctl.conf
+        echo
+        echo "Done setting TCP SYN cookies to be enabled"
+        echo
+else
+        echo 
+        echo "TCP SYN cookies already exists in sysctl.conf and is enabled" | tee -a /root/harden.log
+        echo
+fi
+
+#F-11 Ensuring IPv6 router advertisements are not accepted
+
+echo
+echo "Setting all IPv6 router advertisements to be rejected.." 
+echo
+if [[ -z `egrep -e "net.ipv6.conf.all.accept_ra = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv6.conf.all.accept_ra = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all IPv6 router advertisements to be rejected"
+        echo
+else
+        echo 
+        echo "All IPv6 router advertisement rejection already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default IPv6 router advertisements to be rejected.." 
+echo
+if [[ -z `egrep -e "net.ipv6.conf.default.accept_ra = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv6.conf.default.accept_ra = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default IPv6 router advertisements to be rejected"
+        echo
+else
+        echo 
+        echo "Default IPv6 router advertisement rejection already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+#F-12 Ensuring IPv6 redirects are not accepted
+
+echo
+echo "Setting all IPv6 redirects to be rejected.." 
+echo
+if [[ -z `egrep -e "net.ipv6.conf.all.accept_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv6.conf.all.accept_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting all IPv6 redirects to be rejected"
+        echo
+else
+        echo 
+        echo "All IPv6 redirects rejection already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Setting default IPv6 redirects to be rejected.." 
+echo
+if [[ -z `egrep -e "net.ipv6.conf.default.accept_redirects = 0" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "net.ipv6.conf.default.accept_redirects = 0" >> /etc/sysctl.conf
+        echo
+        echo "Done setting default IPv6 redirects to be rejected"
+        echo
+else
+        echo 
+        echo "Default IPv6 redirects rejection already exists in sysctl.conf" | tee -a /root/harden.log
+        echo
+fi
+
+#F-13 Ensure IPv6 is Disabled
+
+echo "Checking IPv6 is disabled..."
+for i in \
+"options ipv6 disable=1" \
+; do
+  [[ `egrep -q "^${i}" /etc/modprobe.d/CIS.conf` ]] && continue
+  option=${i%% *}
+  grep -q ${option} /etc/modprobe.d/CIS.conf && sed -i "s/.*${option}.*/$i/g" /etc/modprobe.d/CIS.conf || echo "$i" >> /etc/modprobe.d/CIS.conf
+done | tee -a /root/harden.log
+echo
+
+#F-15 Ensure /etc/hosts.allow is configured
+
+echo "Checking /etc/hosts.allow is configured..."
+echo "ALL: <net>/<mask>, <net>/<mask>, ..." >> /etc/hosts.allow
+echo
+
+#F-16 Ensure /etc/hosts.deny is configured
+
+echo "Checking /etc/hosts.deny is configured..."
+echo "ALL: ALL" >> /etc/hosts.deny
+echo
+
+#F-17 Ensure permissions on /etc/hosts.allow are configured
+
+echo "Setting permissions on /etc/hosts.allow"
+chown root:root /etc/hosts.allow
+chmod 644 /etc/hosts.allow
+echo
+
+#F-18  Ensure permissions on /etc/hosts.deny are configured
+
+echo "Setting permissions on /etc/hosts.deny"
+chown root:root /etc/hosts.deny
+chmod 644 /etc/hosts.deny
+echo
+
+#F-19-23 Disabling uncommon network protocols
+
+echo
+echo "Disabling dccp protocol.." 
+echo
+if [[ -z `egrep -e "install dccc /bin/true" /etc/modprobe.d/CIS.conf 2> /dev/null 2>&1` ]]; then
+        echo "install dccp /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo
+        echo "Disabled dccp protocol successfully"
+        echo
+else
+        echo 
+        echo "Dccp protocol already disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Disabling sctp protocol.." 
+echo
+if [[ -z `egrep -e "install sctp /bin/true" /etc/modprobe.d/CIS.conf 2> /dev/null 2>&1` ]]; then
+        echo "install sctp /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo
+        echo "Disabled sctp protocol successfully"
+        echo
+else
+        echo 
+        echo "Sctp protocol already disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Disabling rds protocol.." 
+echo
+if [[ -z `egrep -e "install rds /bin/true" /etc/modprobe.d/CIS.conf 2> /dev/null 2>&1` ]]; then
+        echo "install rds /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo
+        echo "Disabled rds protocol successfully"
+        echo
+else
+        echo 
+        echo "Rds protocol already disabled" | tee -a /root/harden.log
+        echo
+fi
+
+echo
+echo "Disabling tipc protocol.." 
+echo
+if [[ -z `egrep -e "install tipc /bin/true" /etc/modprobe.d/CIS.conf 2> /dev/null 2>&1` ]]; then
+        echo "install tipc /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo
+        echo "Disabled tipc protocol successfully"
+        echo
+else
+        echo 
+        echo "Tipc protocol already disabled" | tee -a /root/harden.log
+        echo
+fi
+echo "Checking iptables is installed..."
+echo
+if [[ `rpm -qa iptables` ]]; then
+        echo "iptables is already installed"
+else
+        echo "chrony is not installed.. installing.."
+        yum -y install iptables | tee -a /root/harden.log
+        echo
+fi
+
+#F-25 Ensure loopback traffic is configured
+
+echo
+echo "Checking loopback traffic is configured..."
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+iptables -A INPUT -s 127.0.0.0/8 -j DROP
+echo
+
+#F-26 Ensure outbound and established connections are configured
+
+echo "Checking outbound and established connections are configured..."
+iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
+iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
+echo
+
+# G-1 Time Synchronization
+
+# Ensure time synchronization is in use
+
+echo "Checking time synchronization is in use or not..."
+echo
+if [[ `rpm -qa chrony` ]]; then
+        echo "chrony is already installed"
+else
+        echo "chrony is not installed.. installing.."
+        yum -y install chrony | tee -a /root/harden.log
+        echo
+fi
+
+# H. Additional Process Hardening
+
+#H-1 Ensuring core dumps are restricted 
+
+echo
+echo "Setting limit hard core 0 in limits.conf.."
+echo
+if [[ -z `egrep -e "* hard core 0" /etc/security/limits.conf 2> /dev/null 2>&1` ]]; then
+	echo "* hard core 0" >> /etc/security/limits.conf
+	echo
+	echo "Done setting limit hard core 0 in limits.conf"
+	echo
+else
+        echo
+        echo "The hard core 0 limit already exists in limits.conf.." | tee -a /root/harden.log
+	echo 
+fi
+
+#H-2 Ensure XD/NX support is enabled
+
+echo "Checking XD/NX support is enabled"
+dmesg | grep NX | tee -a /root/harden.log
+echo
+
+#H-3 Ensuring address space layout randomization (ASLR) is enabled
+
+echo
+echo "Setting address space layout randomization" 
+echo
+if [[ -z `egrep -e "kernel.randomize_va_space = 2" /etc/sysctl.conf 2> /dev/null 2>&1` ]]; then
+        echo "kernel.randomize_va_space = 2" >> /etc/sysctl.conf
+        echo
+        echo "Done setting setting address space layout randomization"
+        echo
+else
+        echo 
+        echo "kernel.randomize_va_space already exists in sysctl.conf and is set to 2" | tee -a /root/harden.log
+        echo
+fi
+
+#H-4 Ensuring prelink is disabled
+	
+	echo 
+	echo "Checking to make sure prelink is not installed.."
+	echo
+	sleep 2
+if [[ -z `rpm -qa prelink` ]]; then
+        echo
+        echo "Prelink is not installed"
+        echo
+else
+	echo
+	echo "Prelink is installed.. removing.." | tee -a /root/harden.log
+	echo 
+	prelink -ua
+	sleep 5
+	yum -y remove prelink
+	echo
+	echo "Prelink has been successfully removed!" | tee -a /root/harden.log
+fi
+
+# I. Configure SELinux
+
+#I-1 Ensuring grub does not have selinux disabled
+
+echo    
+echo    "Backing up grub config first.."
+echo
+        cp -f /etc/default/grub /etc/default/grub.bkp
+echo
+echo    "Grub config backed up"
+echo
+echo
+echo    "Checking if selinux is disabled via grub.."
+echo    
+if [[ -z `egrep -e "selinux=0" /boot/grub2/grub.cfg 2> /dev/null 2>&1` ]]; then 
+	echo
+	echo "Grub does not disable selinux"
+        echo
+else 
+	echo 
+        echo "Selinux is disabled via grub.." | tee -a /root/harden.log
+        echo
+        echo
+        echo "Enabling selinux again and making sure grub dosen't disabled it.."
+        echo
+        sed -i 's/selinux=0//g' /etc/default/grub 2> /dev/null 2>&1
+        echo
+        echo "Done!"
+        echo
+fi
+
+echo
+echo    "Checking if enforcing is disabled via grub.."
+echo    
+if [[ -z `egrep -e "enforcing=0" /boot/grub2/grub.cfg 2> /dev/null 2>&1` ]]; then
+        echo
+        echo "Grub does not disable enforcing"
+        echo
+else
+        echo 
+        echo "Enforcing is disabled via grub.." | tee -a /root/harden.log
+        echo
+        echo
+        echo "Enabling enforcing again and making sure grub dosen't disabled it.."
+        echo
+        sed -i 's/enforcing=0//g' /etc/default/grub 2> /dev/null 2>&1
+        echo
+        echo "Done!"
+        echo
+fi
+
+echo	
+echo	"Re-compiling grub.."
+echo
+	sleep 2
+        grub2-mkconfig > /boot/grub2/grub.cfg 2> /dev/null 2>&1
+echo	
+echo	"Done re-compiling grub :)"
+echo
+
+#I-2 Ensuring SELinux state is enforcing
+
+echo    
+echo    "Backing up selinux config first.."
+echo
+        cp -f /etc/selinux/config /etc/selinux/config.bkp
+echo
+echo    "Selinux config backed up"
+echo
+echo
+echo    "Checking if selinux is enforcing.."
+echo    
+if [[ -z `egrep -e "SELINUX=enforcing" /etc/selinux/config 2> /dev/null 2>&1` ]]; then
+	echo
+	echo "Selinux is NOT enforcing!" | tee -a /root/harden.log
+	echo
+	echo
+	echo "Taking remediation action.."
+	echo
+	sed -i 's/SELINUX=permissive/SELINUX=enforcing/g' /etc/selinux/config 2> /dev/null 2>&1
+	sed -i 's/SELINUX=disabled/SELINUX=enforcing/g' /etc/selinux/config 2> /dev/null 2>&1
+	echo 
+	echo "Selinux has been set to enforce after a reboot - to ensure a relabel of the fs if it was in a fully disabled state"
+	echo
+else
+	echo 
+	echo "Selinux is set to enforcing already so no remediation action needed"
+	echo
+fi 
+
+#I-3 Ensuring selinux policy is configured correctly
+
+echo
+echo    "Checking if selinux policy is set to targeted"
+echo    
+if [[ -z `egrep -e "SELINUXTYPE=targeted" /etc/selinux/config 2> /dev/null 2>&1` ]]; then
+	echo
+	echo "Selinux policy is not set correctly!" | tee -a /root/harden.log
+	echo
+	echo
+	echo "Taking remediation action.."
+	echo
+	sed -i 's/SELINUXTYPE=minimum/SELINUXTYPE=targeted/g' /etc/selinux/config 2> /dev/null 2>&1
+	sed -i 's/SELINUXTYPE=mls/SELINUXTYPE=targeted/g' /etc/selinux/config 2> /dev/null 2>&1
+	echo 
+	echo "Selinux policy setting has been corrected"
+	echo
+else
+	echo 
+	echo "Selinux policy is set correctly to targeted"
+	echo
+fi
+
+#I-4 Ensuring mcstrans is disabled
+
+        echo 
+        echo "Checking to make sure mcstrans is not installed.."
+        echo
+if [[ `rpm -qa mcstrans` ]]; then
+        echo
+        echo "Mcstrans is not installed"
+        echo
+else
+        echo
+        echo "Mcstrans is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        yum -y remove mcstrans
+        sleep 2
+	echo
+      	echo "Mcstrans has been successfully removed!" | tee -a /root/harden.log
+fi
+
+#I-5 Checking to ensure no unconfined daemons exist
+
+echo
+echo "Checking no unconfined daemons exist and ensuring no output is produced..."
+ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }' | tee -a /root/harden.log
+echo
+
+#I-6 Checking to ensure that selinux is installed 
+
+	echo 
+        echo "Checking to make sure selinux is really installed and not a farce.."
+        echo
+if [[ -z `rpm -qa libselinux` ]]; then
+        echo
+        echo "Selinux is not installed!! WHAT THE HELL!" | tee -a /root/harden.log
+	echo
+	echo "Installing now!!"
+	echo
+	yum -y install libselinux
+	sleep 3
+	echo
+	echo "Selinux has now been installed by me.. rerun the hardening script again to ensure it's hardened properly" | tee -a /root/harden.log
+        echo
+else
+        echo
+        echo "Selinux is installed truly.. no cause for concern"
+        echo 
+fi
+
+# J. Configure CRON
+
+#J-1 Ensuring crond service is started (logging)
+echo
+echo "Enabling crond service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep crond &> /dev/null 2>&1; then
+        echo
+        echo "Crond is already enabled"
+        echo
+else
+        echo
+        echo "Crond is disabled or not present.." | tee -a /root/harden.log
+        echo
+        echo "Enabling now!"
+        echo
+        systemctl enable crond
+        echo
+        echo "Done enabling crond"
+        echo
+fi
+
+#J-2 Setting permissions on /etc/crontab
+
+        echo
+        echo "Setting correct permissions on /etc/crontab file"
+        echo
+        chown root:root /etc/crontab
+        chmod og-rwx /etc/crontab
+        echo
+        echo "Correct permissions set on /etc/crontab"
+        echo
+
+#J-3 Setting permissions on /etc/crontab.hourly
+
+        echo
+        echo "Setting correct permissions on /etc/cron.hourly file"
+        echo
+        chown root:root /etc/cron.hourly
+        chmod og-rwx /etc/cron.hourly
+        echo
+        echo "Correct permissions set on /etc/cron.hourly"
+        echo
+
+#J-4 Setting permissions on /etc/crontab.daily
+
+        echo
+        echo "Setting correct permissions on /etc/cron.daily file"
+        echo
+        chown root:root /etc/cron.daily
+        chmod og-rwx /etc/cron.daily
+        echo
+        echo "Correct permissions set on /etc/cron.daily"
+        echo
+
+#J-5 Setting permissions on /etc/crontab.weekly
+
+        echo
+        echo "Setting correct permissions on /etc/cron.weekly file"
+        echo
+        chown root:root /etc/cron.weekly
+        chmod og-rwx /etc/cron.weekly
+        echo
+        echo "Correct permissions set on /etc/cron.weekly"
+        echo
+
+#J-6 Setting permissions on /etc/crontab.monthly
+
+        echo
+        echo "Setting correct permissions on /etc/cron.weekly file"
+        echo
+        chown root:root /etc/cron.monthly
+        chmod og-rwx /etc/cron.monthly
+        echo
+        echo "Correct permissions set on /etc/cron.weekly"
+        echo
+
+#J-7 Setting permissions on /etc/cron.d folder
+
+        echo
+        echo "Setting correct permissions on /etc/cron.d folder"
+        echo
+        chown root:root /etc/cron.d
+        chmod og-rwx /etc/cron.d
+        echo
+        echo "Correct permissions set on /etc/cron.d folder"
+        echo
+
+#J-8 Ensuring at/cron is restricted to authorized users
+
+	echo
+	echo "Ensuring at/cron is restricted to authorized users"
+	echo
+	rm -rf /etc/cron.deny
+	rm -rf /etc/at.deny
+	touch /etc/cron.allow
+	touch /etc/at.allow
+	chmod og-rwx /etc/cron.allow
+	chmod og-rwx /etc/at.allow
+	chown root:root /etc/cron.allow
+	chown root:root /etc/at.allow
+	echo
+	echo "Done! cron.deny and at.deny have been removed and all users who are authorized to use cron need to be listed in cron.allow & at.allow"
+	echo
+
+# # K. Configure SSH
+
+#K-1-12 echo "Configuring SSH..."
+ cp /etc/ssh/sshd_config /etc/ssh/sshd_config_$TIME.bak
+ for i in \
+ "LogLevel INFO" \
+ "Protocol 2" \
+ "X11Forwarding no" \
+ "MaxAuthTries 4" \
+ "IgnoreRhosts yes" \
+ "HostbasedAuthentication no" \
+ "PermitRootLogin yes" \
+ "PermitEmptyPasswords no" \
+ "PermitUserEnvironment no" \
+ "ClientAliveInterval 300" \
+ #"ClientAliveCountMax 0" \
+ ; do
+   [[ `egrep -q "^${i}" /etc/ssh/sshd_config` ]] && continue
+   option=${i%% *}
+   grep -q ${option} /etc/ssh/sshd_config && sed -i "s/.*${option}.*/$i/g" /etc/ssh/sshd_config || echo "$i" >> /etc/ssh/sshd_config
+ done
+
+# K-14 Make sure SSH access is limited
+
+# if [[ `grep "^AllowUsers" /etc/ssh/sshd_config`  && `grep "^AllowGroups" /etc/ssh/sshd_config` && `grep "^DenyUsers" /etc/ssh/sshd_config` && `grep "^DenyGroups" /etc/ssh/sshd_config` ]]; then
+#         echo ''
+#   else
+#     echo 'AllowUsers <userlist>' >> /etc/ssh/sshd_config
+#     echo 'AllowGroups <grouplist>' >> /etc/ssh/sshd_config
+#     echo 'DenyUsers <grouplist>' >> /etc/ssh/sshd_config
+#     echo 'DenyGroups <grouplist>' >> /etc/ssh/sshd_config
+# fi
+#K-11 Make sure only approved MAC algorithms are used
+if [[ `grep "^MACs" /etc/ssh/sshd_config` ]]; then
+          echo ''
+   else
+         echo 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com' >> /etc/ssh/sshd_config
+ fi
+
+#K-13 Make sure sshd LoginGraceTime is set to 60 (seconds)
+
+         echo
+         echo    "Making sure sshd has LoginGraceTime set to 60 seconds"
+         echo
+         echo
+         echo    "Setting sshd LoginGraceTime to 60"
+         echo  
+         sed -i '/LoginGraceTime 1m/s/^#//g' /etc/ssh/sshd_config
+         sed -i -e 's/LoginGraceTime 1m/LoginGraceTime 60/g' /etc/ssh/sshd_config
+ 		sed -i -e 's/idle-timeout 5m/idle-timeout 300/g' /etc/ssh/sshd_config
+         echo    
+         echo    "Sshd LoginGraceTime set to 300!"
+         echo
+
+         touch /etc/ssh/ssh-server-config.xml
+ echo "<log-events facility="local7" severity="informational">" | sudo tee -a protectedFile >> /etc/ssh/ssh-server-config.xml
+ echo "<tunnel-x11 action="deny" />" | sudo tee -a protectedFile >> /etc/ssh/ssh-server-config.xml
+ echo "<authentication name="denyadmin" action="deny">" | sudo tee -a protectedFile >> /etc/ssh/ssh-server-config.xml
+ echo "<rule idle-timeout="600">" | sudo tee -a protectedFile >> /etc/ssh/ssh-server-config.xml
+ echo "<authentication-methods login-grace-time="60">" | sudo tee -a protectedFile >> /etc/ssh/ssh-server-config.xml
+
+ chown root:root /etc/ssh/sshd_config
+ chmod 600 /etc/ssh/sshd_config
+
+ systemctl restart sshd | tee -a /root/harden.log
+ echo "Done"
+
+# L. User and Group Settings
+
+#L-19 Ensuring no duplicate group names exist
+
+echo "Checking for Duplicate Group Names..."
+
+cat /etc/group | cut -f1 -d":" | /bin/sort -n | /usr/bin/uniq -c |\
+    while read x ; do
+    [ -z "${x}" ] && break
+    set - $x
+    if [ $1 -gt 1 ]; then
+        gids=`/bin/gawk -F: '($1 == n) { print $3 }' n=$2 \
+            /etc/group | xargs`
+        echo "Duplicate Group Name ($2): ${gids}"  | tee -a /root/harden.log
+    fi
+done
+echo
+
+#L-18 Ensuring no duplicate user names exist
+
+echo "Checking for Duplicate User Names..."
+
+cat /etc/passwd | cut -f1 -d":" | sort -n | /usr/bin/uniq -c |\
+    while read x ; do
+    [ -z "${x}" ] && break
+    set - $x
+    if [ $1 -gt 1 ]; then
+        uids=`/bin/gawk -F: '($1 == n) { print $3 }' n=$2 \
+            /etc/passwd | xargs`
+        echo "Duplicate User Name ($2): ${uids}"  | tee -a /root/harden.log
+    fi
+done
+echo
+
+#L-17 Ensuring no duplicate GIDs exist
+
+echo "Checking for Duplicate GIDs..."
+
+cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    groups=`awk -F: '($3 == n) { print $1 }' n=$2 /etc/group | xargs`
+    echo "Duplicate GID ($2): ${groups}" | tee -a /root/harden.log
+  fi
+done
+echo
+
+#L-16 Ensuring no duplicate UIDs exist
+
+echo "Checking for Duplicate UIDs..."
+
+cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    users=`awk -F: '($3 == n) { print $1 }' n=$2 /etc/passwd | xargs`
+    echo "Duplicate UID ($2): ${users}" | tee -a /root/harden.log
+  fi
+done
+echo
+
+#L-15 Ensuring all groups in /etc/passwd exist in /etc/group
+
+echo "Checking groups in /etc/passwd also exists in /etc/group..."
+
+for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
+  grep -q -P "^.*?:x:$i:" /etc/group
+  if [ $? -ne 0 ]; then
+    echo "Group $i is referenced by /etc/passwd but does not exist in /etc/group" | tee -a /root/harden.log
+  fi
+done
+echo
+
+#L-14 Ensuring no users have .rhosts files
+
+echo "Checking for presence of user .rhosts Files...if exists removing it.."
+
+awk -F: '($1!~/(halt|sync|shutdown|nfsnobody)/ &&
+$7!~/^(\/usr)?\/sbin\/nologin(\/)?$/ && $7!~/(\/usr)?\/bin\/false(\/)?$/) {
+print $6 }' /etc/passwd | while read -r dir; do
+ if [ -d "$dir" ]; then
+ file="$dir/.rhosts"
+ [ ! -h "$file" ] && [ -f "$file" ] && rm -r "$file" | tee -a /root/harden.log
+ fi
+done
+echo
+
+#L-13 Ensuring users .netrc Files are not group or world accessible
+
+echo "Checking Permissions on User .netrc Files..."
+
+
+for dir in `cat /etc/passwd | egrep -v '(root|sync|halt|shutdown)' | awk -F: '($7 != "/usr/sbin/nologin") { print $6 }'`; do
+  for file in $dir/.netrc; do
+    if [ ! -h "$file" -a -f "$file" ]; then
+      fileperm=`ls -ld $file | cut -f1 -d" "`
+      if [ `echo $fileperm | cut -c5 ` != "-" ]; then
+        echo "Group Read set on $file"
+      fi
+      if [ `echo $fileperm | cut -c6 ` != "-" ]; then
+        echo "Group Write set on $file"
+      fi
+      if [ `echo $fileperm | cut -c7 ` != "-" ]; then
+        echo "Group Execute set on $file"
+      fi
+      if [ `echo $fileperm | cut -c8 ` != "-" ]; then
+        echo "Other Read set on $file"
+      fi
+      if [ `echo $fileperm | cut -c9 ` != "-" ]; then
+        echo "Other Write set on $file"
+      fi
+      if [ `echo $fileperm | cut -c10 ` != "-" ]; then
+        echo "Other Execute set on $file"  | tee -a /root/harden.log
+      fi
+    fi
+  done
+done
+echo
+
+#L-11 Ensuring no users have .netrc files
+
+echo "Checking for Presence of User .netrc Files..."
+
+for dir in `/bin/cat /etc/passwd |\
+    /bin/awk -F: '{ print $6 }'`; do
+    if [ ! -h "$dir/.netrc" -a -f "$dir/.netrc" ]; then
+        echo ".netrc file $dir/.netrc exists" | tee -a /root/harden.log
+    fi
+done
+echo
+
+#L-10 Ensure users' dot files are not group or world writable
+echo
+echo "Checking users' dot files are not group or world writable"
+
+for dir in `cat /etc/passwd | egrep -v '(root|sync|halt|shutdown)' | awk -F: '($7 != "/usr/sbin/nologin") { print $6 }'`; do
+  for file in $dir/.[A-Za-z0-9]*; do
+    if [ ! -h "$file" -a -f "$file" ]; then
+      fileperm=`ls -ld $file | cut -f1 -d" "` 
+      if [ `echo $fileperm | cut -c6 ` != "-" ]; then
+       echo "Group Write permission set on file $file" 
+      fi 
+      if [ `echo $fileperm | cut -c9 ` != "-" ]; then
+       echo "Other Write permission set on file $file" 
+      fi 
+    fi 
+  done 
+done
+echo "check completed"
+echo
+
+#L-11 Ensuring no users have .forward files
+
+echo "Checking for Presence of User .forward Files..."
+
+for dir in `/bin/cat /etc/passwd |\
+    /bin/awk -F: '{ print $6 }'`; do
+    if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+        echo ".forward file $dir/.forward exists"  | tee -a /root/harden.log
+    fi
+done
+echo
+
+#L-7 Ensuring all users' home directories exist
+
+echo "Checking that users are assigned home directories..."
+
+cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
+  if [ $uid -ge 1000 -a ! -d "$dir" -a $user != "nfsnobody" ]; then
+    echo "The home directory ($dir) of user $user does not exist." 
+  fi 
+done
+echo
+
+#L-6 Ensure root PATH Integrity
+
+echo
+echo "checking root integrity path"
+#!/bin/bash 
+if [ "`echo $PATH | grep :: `" != "" ]; then 
+  echo "Empty Directory in PATH (::)" 
+fi 
+if [ "`echo $PATH | grep :$`" != "" ]; then 
+  echo "Trailing : in PATH" 
+fi 
+p=`echo $PATH | sed -e 's/::/:/' -e 's/:$//' -e 's/:/ /g'` 
+set -- $p 
+while [ "$1" != "" ]; do
+  if [ "$1" = "." ]; then
+    echo "PATH contains ." 
+    shift 
+    continue 
+  fi 
+  if [ -d $1 ]; then
+    dirperm=`ls -ldH $1 | cut -f1 -d" "` 
+    if [ `echo $dirperm | cut -c6 ` != "-" ]; then
+      echo "Group Write permission set on directory $1" 
+    fi 
+  if [ `echo $dirperm | cut -c9 ` != "-" ]; then
+    echo "Other Write permission set on directory $1" 
+  fi 
+  dirown=`ls -ldH $1 | awk '{print $3}'` 
+  if [ "$dirown" != "root" ] ; then
+    echo $1 is not owned by root 
+  fi 
+  else 
+    echo $1 is not a directory
+  fi 
+  shift 
+done
+echo
+echo "check completed"
+
+
+#L-5 Ensure root is the only UID 0 account
+
+echo "Checking root is the only UID 0 account..."
+cat /etc/passwd | awk -F: '($3 == 0) { print $1 }' | tee -a /root/harden.log
+echo
+
+# L 2-4 Ensuring no legacy "+" entries exist in /etc/group, /etc/shadow, /etc/passwd
+
+echo "checking no legacy "+" entries present in /etc/group, shadow, passwd..."
+grep '^+:' /etc/group | tee -a /root/harden.log
+grep '^+:' /etc/shadow | tee -a /root/harden.log
+grep '^+:' /etc/passwd | tee -a /root/harden.log
+echo
+
+#L-1 Ensuring password fields are not empty
+
+echo "Checking no password fields are empty..."
+cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}'| tee -a /root/harden.log
+echo
+
+# M. Warning Banners
+
+#M-1 Ensuring /etc/motd has the relevant policy message
+
+echo
+echo	"Overwriting /etc/motd with relevant policy message"
+echo 
+cat <<EOT > /etc/motd
+Authorised Users Only
+Use of this network is restricted to authorised users only.  User activity may be monitored and/or recorded. Anyone using this network expressly consents to such monitoring and/or recording.  BE ADVISED: if possible criminal activity is detected, these records, along with certain personal information, may be provided to law enforcement officials.
+EOT
+echo
+echo    "Done inserting policy message into /etc/motd"
+echo
+
+#M-2 Ensuring /etc/issue has the relevant policy message
+
+echo
+echo    "Overwriting /etc/issue with relevant policy message"
+echo 
+cat <<EOT > /etc/issue
+Authorised Users Only
+Use of this network is restricted to authorised users only.  User activity may be monitored and/or recorded. Anyone using this network expressly consents to such monitoring and/or recording.  BE ADVISED: if possible criminal activity is detected, these records, along with certain personal information, may be provided to law enforcement officials.
+EOT
+echo
+echo    "Done inserting policy message into /etc/issue"
+echo 
+
+#M-3 Ensuring /etc/issue.net has the relevant policy message
+
+echo
+echo    "Overwriting /etc/issue.net with relevant policy message"
+echo 
+cat <<EOT > /etc/issue.net
+Authorised Users Only
+Use of this network is restricted to authorised users only.  User activity may be monitored and/or recorded. Anyone using this network expressly consents to such monitoring and/or recording.  BE ADVISED: if possible criminal activity is detected, these records, along with certain personal information, may be provided to law enforcement officials.
+EOT
+echo
+echo    "Done inserting policy message into /etc/issue.net"
+echo 
+
+#M-4-6 Ensuring correct permissions on files set with policy message
+
+echo
+echo    "Setting correct permissions for motd, issue and issue.net"
+echo 
+chown root:root /etc/motd /etc/issue /etc/issue.net
+chmod 644 /etc/motd /etc/issue /etc/issue.net
+echo
+echo	"Correct permissions have been set on these files"
+echo
+
+# N.Antivirus Software
+
+# O. System Services to be Not Enabled
+ 
+#O-1-6 Ensuring unnecessary services like chargen-dgram and chargen-stream are turned off if present
+
+echo
+echo "Turning off xinetd based subservices"
+echo
+chkconfig chargen-dgram off &> /dev/null
+chkconfig chargen-stream off &> /dev/null 
+chkconfig daytime-dgram off &> /dev/null 
+chkconfig daytime-stream off &> /dev/null 
+chkconfig discard-dgram off &> /dev/null 
+chkconfig discard-stream off &> /dev/null 
+chkconfig "echo-dgram" off &> /dev/null 
+chkconfig "echo-stream" off &> /dev/null 
+chkconfig "time-dgram" off &> /dev/null 
+chkconfig "time-stream" off &> /dev/null 
+chkconfig tftp off &> /dev/null
+echo 
+echo "Done turning off these services"
+echo
+
+# Checking to ensure that ntp is installed
+
+#echo "ntp is not supported in RHEL8"
+
+#O-8 Ensuring X Window System is not installed
+
+echo
+echo "Checking X window system is not installed"
+echo
+echo
+if [[ `rpm -qa xserver-xorg*` ]]; then
+        yum remove xserver-xorg* | tee -a /root/harden.log
+else
+        echo
+        echo "X window system is not present.."
+        echo
+fi
+
+#O-7 Ensuring xinetd is not enabled
+
+echo
+echo "Disabling xinetd service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep xinetd &> /dev/null 2>&1; then
+        systemctl disable xinetd
+else
+        echo
+        echo "xinetd is already disabled or not present.."
+        echo
+fi
+
+#O-9 Ensuring avahi-daemon itself is disabled if present
+
+echo
+echo "Disabling avahi-daemon service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep 'avahi-daemon' &> /dev/null 2>&1; then
+        systemctl disable avahi-daemon
+else
+        echo
+        echo "Service avahi-daemon is already disabled or not present.."
+        echo
+fi
+
+#O-10 Ensuring CUPS is not enabled
+
+echo "Disabling CUPS service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep 'cups' &> /dev/null 2>&1; then
+        systemctl disable cups
+else
+        echo
+        echo "CUPS is already disabled or not present.."
+        echo
+fi
+
+
+#O-11 Ensuring dhpcd itself is disabled if present
+
+echo
+echo "Disabling dhcpd service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep dhcpd &> /dev/null 2>&1; then
+        systemctl disable dhcpd
+else
+        echo
+        echo "Dhcpd is already disabled or not present.."
+        echo
+fi
+
+#O-12 Ensuring that LDAP itself is disabled if present
+
+echo
+echo "Disabling slapd service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep slapd &> /dev/null 2>&1; then
+        systemctl disable slapd
+else
+        echo
+        echo "LDAP is already disabled or not present.."
+        echo
+fi
+
+#O-13 Ensuring that NFS and RPC itself are disabled if present
+
+echo
+echo "Disabling nfs service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep nfs &> /dev/null 2>&1; then
+        
+else
+        echo
+        echo "Nfs is already disabled or not present.."
+        echo
+fi
+
+echo
+echo "Disabling rpcbind service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rpcbind &> /dev/null 2>&1; then
+        systemctl disable rpcbind
+else
+        echo
+        echo "Rpcbind is already disabled or not present.."
+     echo
+fi
+
+#O-14 Ensuring DNS server is not enabled
+
+echo
+echo "Disabling DNS service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep named &> /dev/null 2>&1; then
+        systemctl disable named
+else
+        echo
+        echo "DNS is already disabled or not present.."
+        echo
+fi
+
+#O-15 Ensuring that FTP is disabled
+
+echo
+echo "Disabling FTP service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep vsftpd &> /dev/null 2>&1; then
+        systemctl disable vsftpd
+else
+      echo
+       echo "FTP is already disabled or not present.."
+        echo
+fi
+
+#O-16 Ensuring that httpd itself is disabled if present - FLAG OUT THAT THIS IS NOT RECOMMENDED TO CUSTOMER
+
+echo
+echo "Disabling httpd service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep httpd &> /dev/null 2>&1; then
+        systemctl disable httpd
+else
+        echo
+        echo "Httpd is already disabled or not present.."
+        echo
+fi
+
+#O-17 Ensure IMAP and POP3 server is not enabled   
+
+echo
+echo "Disabling IMAP and POP3  service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep dovecot &> /dev/null 2>&1; then
+        systemctl disable dovecot
+else
+        echo
+        echo "IMAP and POP3 are already disabled or not present.."
+        echo
+fi
+
+#O-18 Ensuring that samba is disabled if present
+
+echo
+echo "Disabling samba service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep smb &> /dev/null 2>&1; then
+        systemctl disable smb
+else
+        echo
+        echo "Smb is already disabled or not present.."
+        echo
+fi
+
+#O-19 Ensure HTTP Proxy Server is not enabled
+
+echo
+echo "Disabling HTTP Proxy server"
+echo
+if systemctl list-unit-files --state=enabled -all | grep squid &> /dev/null 2>&1; then
+        systemctl disable squid
+else
+        echo
+        echo "HTTP proxy server is already disabled or not present.."
+        echo
+fi
+
+#O-21 Ensuring that NIS is disabled if present
+
+echo
+echo "Disabling NIS service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep ypserv &> /dev/null 2>&1; then
+        systemctl disable ypserv
+else
+        echo
+        echo "NIS is already disabled or not present.."
+        echo
+fi
+
+#O-22 Ensuring that rsh and it's subservices are completely disabled if present
+
+echo
+echo "Disabling rsh.socket"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rsh.socket &> /dev/null 2>&1; then
+        systemctl disable rsh.socket
+else
+        echo
+        echo "Rsh.socket disabled or not present.."
+        echo
+fi
+
+echo
+echo "Disabling rlogin.socket"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rlogin.socket &> /dev/null 2>&1; then
+        systemctl disable rlogin.socket
+else
+        echo
+        echo "Rlogin.socket disabled or not present.."
+        echo
+fi
+
+echo
+echo "Disabling rexec.socket"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rexec.socket &> /dev/null 2>&1; then
+        systemctl disable rexec.socket
+else
+        echo
+        echo "Rexec.socket disabled or not present.."
+        echo
+fi
+
+# Ensuring that ntalk is disabled if present
+
+#echo
+#echo "Disabling ntalk"
+#echo
+#if systemctl list-unit-files --state=enabled -all | grep ntalk &> /dev/null 2>&1; then
+#        systemctl disable ntalk
+#else
+#        echo
+#        echo "Ntalk disabled or not present.."
+#        echo
+#fi
+
+#O-23 Ensuring that telnet.socket service is disabled if present
+
+echo
+echo "Disabling telnet.socket"
+echo
+if systemctl list-unit-files --state=enabled -all | grep telnet.socket &> /dev/null 2>&1; then
+        systemctl disable telnet.socket
+else
+        echo
+        echo "telnet.socket disabled or not present.."
+        echo
+fi
+#O-24 Ensuring that tftp.socket service (different from xinetd tftp) is disabled if present
+
+echo
+echo "Disabling tftp.socket"
+echo
+if systemctl list-unit-files --state=enabled -all | grep tftp.socket &> /dev/null 2>&1; then
+        systemctl disable tftp.socket
+else
+        echo
+        echo "tftp.socket disabled or not present.."
+        echo
+fi
+
+#O-25 Ensuring that rsyncd service is disabled if present
+
+echo
+echo "Disabling rsyncd"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rsyncd &> /dev/null 2>&1; then
+        systemctl disable rsyncd
+else
+        echo
+        echo "Rsyncd disabled or not present.."
+        echo
+fi
+
+#O-27 Ensuring ypbind (NIS client) is disabled
+
+        echo 
+        echo "Checking to make sure ypbind is not installed.."
+        echo
+        sleep 2
+if [[ -z `rpm -qa ypbind` ]]; then
+        echo
+        echo "Ypbind is not installed"
+        echo
+else
+        echo
+        echo "Ypbind is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        sleep 2
+        yum -y remove ypbind
+        echo
+        echo "Ypbind has been successfully removed!" | tee -a /root/harden.log
+fi
+
+#O-28 Ensuring rsh client is disabled
+
+	echo 
+        echo "Checking to make sure rsh client is not installed.."
+        echo
+        sleep 2
+if [[ -z `rpm -qa rsh` ]]; then
+        echo
+        echo "Rsh client is not installed"
+        echo
+else
+        echo
+        echo "Rsh client is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        sleep 2
+        yum -y remove rsh
+        echo
+        echo "Rsh client has been successfully removed!" | tee -a /root/harden.log
+fi
+
+#O-29 Ensure talk client is disabled
+
+	echo 
+        echo "Checking to make sure talk client is not installed.."
+        echo
+        sleep 2
+if [[ -z `rpm -qa talk` ]]; then
+        echo
+        echo "Talk client is not installed"
+        echo
+else
+        echo
+        echo "Talk client is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        sleep 2
+        yum -y remove talk
+        echo
+        echo "Talk has been successfully removed!" | tee -a /root/harden.log
+fi
+
+#O-30 Ensure telnet client is disabled
+
+	echo 
+        echo "Checking to make sure telnet client is not installed.."
+        echo
+        sleep 2
+if [[ -z `rpm -qa telnet` ]]; then
+        echo
+        echo "Telnet client is not installed"
+        echo
+else
+        echo
+        echo "Telnet client is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        sleep 2
+        yum -y remove telnet
+        echo
+        echo "Telnet client has been successfully removed!" | tee -a /root/harden.log
+fi
+#O-31 Ensure ldap client is disabled
+
+	echo 
+        echo "Checking to make sure ldap client is not installed.."
+        echo
+        sleep 2
+if [[ -z `rpm -qa openldap-clients` ]]; then
+        echo
+        echo "Openldap-clients is not installed"
+        echo
+else
+        echo
+        echo "Openldap-clients is installed.. removing.." | tee -a /root/harden.log
+        echo 
+        sleep 2
+        yum -y remove openldap-clients
+        echo
+        echo "Openldap-clients has been successfully removed!" | tee -a /root/harden.log
+fi
+
+# P. Logging and Auditing
+
+#P-2 Ensuring auditd service is enabled
+
+echo
+echo "Enabling auditd service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep auditd &> /dev/null 2>&1; then
+        echo
+        echo "auditd is already enabled"
+        echo
+else
+	echo
+	echo "auditd is disabled or not present.." | tee -a /root/harden.log
+	echo
+	echo "Enabling now!"
+	echo
+        systemctl enable auditd
+	echo
+	echo "Done enabling auditd"
+	echo
+fi
+
+#P-3 Ensuring that services that start before auditd starts are also audited
+
+echo
+echo    "Ensuring that services that start before auditd starts are also audited.."
+echo    
+if [[ -z `egrep -e "audit=1" /boot/grub2/grub.cfg 2> /dev/null 2>&1` ]]; then
+        echo
+        echo "Grub does not enable auditing at boot! ENABLING NOW!" | tee -a /root/harden.log
+	echo
+        sed -i "s/GRUB_CMDLINE_LINUX=\"\(.*\)\"/GRUB_CMDLINE_LINUX=\"\1 audit=1\"/" /etc/default/grub 2> /dev/null 2>&1        
+	echo
+	echo "Auditd will now be auditing services even at boot before it starts.."
+	echo
+else
+	echo 
+	echo "Auditd is already set to do this"
+	echo
+fi
+
+echo    
+echo    "But before that can happen for sure, best to re-compile grub.."
+echo
+        sleep 2
+        grub2-mkconfig > /boot/grub2/grub.cfg 2> /dev/null 2>&1
+echo    
+echo    "Done re-compiling grub :>>"
+echo
+
+#P-4 Ensuring events that modify date and time are collected
+
+echo    
+echo    "Backing up audit.rules file first.."
+echo
+        cp -f /etc/audit/audit.rules /etc/audit/audit.rules
+echo
+echo    "Audit.rules backed up"
+echo
+
+echo 
+echo	"Checking to ensure events that modify date and time are collected.."
+echo 
+if [[ -z `egrep -e "adjtimex" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo	"Warning.. events that modify date and time are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo	"Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always, exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
+-a always, exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
+-a always, exit -F arch=b64 -S clock_settime -k time-change
+-a always, exit -F arch=b32 -S clock_settime -k time-change
+-w /etc/localtime -p wa -k time-change
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Events that modify date and time are already being collected"
+	echo
+fi
+
+#P-5 Ensuring events that modify user/group information are collected
+
+	echo 
+	echo    "Checking to ensure events that modify user/group information are collected.."
+	echo 
+if [[ -z `egrep -e "-w /etc/group -p wa -k identity" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. events that modify user/group information are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /etc/group -p wa -k identity
+-w /etc/passwd -p wa -k identity
+-w /etc/gshadow -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/security/opasswd -p wa -k identity 
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Events that modify user/group information are already being collected"
+	echo
+fi
+
+#P-6 Ensuring events that modify network environment are collected
+
+	echo 
+	echo    "Checking to ensure events that modify network environment are collected.."
+	echo 
+if [[ -z `egrep -e "setdomainname" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such events that modify network environment are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale
+-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale
+-w /etc/issue -p wa -k system-locale
+-w /etc/issue.net -p wa -k system-locale
+-w /etc/hosts -p wa -k system-locale
+-w /etc/sysconfig/network -p wa -k system-locale
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Events that modify network environment are already being collected"
+	echo
+fi
+
+#P-7 Ensuring events that modify the Mandatory Access Control (selinux) of the system are collected
+
+	echo 
+	echo    "Checking to ensure events that modify Mandatory AC are collected.."
+	echo 
+if [[ -z `egrep -e "-w /etc/selinux/ -p wa -k MAC-policy" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such events that modify Mandatory AC are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /etc/selinux/ -p wa -k MAC-policy
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Events that modify Mandatory AC are already being collected"
+	echo
+fi
+
+#P-8 Ensuring login/logout events are collected
+
+	echo 
+	echo    "Checking to ensure login/logout events are collected.."
+	echo 
+if [[ -z `egrep -e "-w /var/log/lastlog -p wa -k logins" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such login/logout events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /var/log/lastlog -p wa -k logins
+-w /var/run/faillock/ -p wa -k logins
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Events related to login/logout are already being collected"
+	echo
+fi
+
+#P-9 Ensuring session initiation information is collected
+
+	echo 
+	echo    "Checking to ensure session initiation information collected.."
+	echo 
+if [[ -z `egrep -e "-w /var/run/utmp -p wa -k session" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such session initiation information is currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /var/run/utmp -p wa -k session
+-w /var/run/wtmp -p wa -k session
+-w /var/log/btmp -p wa -k session
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Session initiation information is already being collected"
+	echo
+fi
+
+#P-10 Ensuring disc acl permission modification events are collected
+
+	echo 
+	echo    "Checking to ensure disc acl permission modification events are collected.."
+	echo 
+if [[ -z `egrep -e "fchmod -S fchmodat" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such disc acl permission modification events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Disc acl permission modification events are already being collected"
+	echo
+fi
+#P-11 Ensuring unsuccessful unauthorized file access events are collected
+
+	echo 
+	echo    "Checking to ensure unauthorized file access events are collected.."
+	echo 
+if [[ -z `egrep -e "EACCES" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such unauthorized file access events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Unauthorized file access events are already being collected"
+	echo
+fi
+
+#P-13 Ensuring mount events are collected
+
+	echo 
+	echo    "Checking to ensure mount events are collected.."
+	echo 
+if [[ -z `egrep -e "-a always,exit -F arch=b64 -S mount -F" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such mount events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Such mount events are already being collected"
+	echo
+fi
+
+#P-14 Ensuring file deletion events by users are collected
+
+	echo 
+	echo    "Checking to ensure file deletion events by users are collected.."
+	echo 
+if [[ -z `egrep -e "-a always,exit -F arch=b64 -S unlink -S unlinkat" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such file deletion events by users are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Such file deletion events by users are already being collected"
+	echo
+fi
+#P-15 Ensuring changes to sudoers are collected
+
+	echo 
+	echo    "Checking to ensure changes to sudoers events are collected.."
+	echo 
+if [[ -z `egrep -e "-w /etc/sudoers -p wa -k scope" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such changes to sudoers events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /etc/sudoers -p wa -k scope
+-w /etc/sudoers.d -p wa -k scope
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Such changes to sudoers events are already being collected"
+	echo
+fi
+
+#P-16 Ensuring sysadmin actions (sudolog) are collected
+
+	echo 
+	echo    "Checking to ensure sysadmin action events are collected.."
+	echo 
+if [[ -z `egrep -e "sudo.log" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such sysadmin action events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /var/log/sudo.log -p -wa -k actions
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Such sysadmin action events are already being collected"
+	echo
+fi
+
+#P-17 Ensuring kernel module loading and unloading events are collected
+
+	echo 
+	echo    "Checking to ensure kernel module loading and unloading events are collected.."
+	echo 
+if [[ -z `egrep -e "-w /sbin/insmod -p x -k modules" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. such kernel module loading and unloading  events are currently not being logged!" | tee -a /root/harden.log
+	echo
+	echo
+	echo    "Fixing this problem!"
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-w /sbin/insmod -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+-a always,exit arch=b64 -S init_module -S delete_module -k modules
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Such kernel module loading and unloading events are already being collected"
+	echo
+fi
+
+#P-18 Ensuring audit configuration is immutable
+
+	echo 
+	echo    "Checking to ensure audit configuration is immutable"
+	echo 
+if [[ -z `egrep -e "-e 2" /etc/audit/audit.rules 2> /dev/null 2>&1` ]]; then
+	echo
+	echo    "Warning.. audit configuration is not immutable yet!" | tee -a /root/harden.log
+	echo
+	echo
+e	echo    "Fixing this problem!"
+ 
+	echo
+cat <<EOT >> /etc/audit/audit.rules
+-e 2
+EOT
+	echo
+	echo    "Problem fixed!"
+	echo
+else
+	echo
+        echo    "Audit configuration is already set to immutable"
+	echo
+fi
+
+cp -Rf /etc/audit/audit.rules /etc/audit/rules.d/
+
+#P-19 Ensuring rsyslog service is started (logging)
+
+echo
+echo "Enabling rsyslog service"
+echo
+if systemctl list-unit-files --state=enabled -all | grep rsyslog &> /dev/null 2>&1; then
+        echo
+        echo "Rsyslogd is already enabled"
+        echo
+else
+	echo
+	echo "Rsyslogd is disabled or not present.." | tee -a /root/harden.log
+	echo
+	echo "Enabling now!"
+	echo
+        systemctl enable rsyslog
+	echo
+	echo "Done enabling rsyslogd"
+	echo
+fi
+
+#P-21 Ensuring correct rsyslog permissions are set
+
+        echo 
+        echo    "Checking to ensure correct rsyslog permissions are set"
+        echo 
+if [[ -z `egrep -e "\$FileCreateMode 0640" /etc/rsyslog.conf 2> /dev/null 2>&1` ]]; then
+        echo
+        echo    "Warning.. correct rsyslog permission missing!" | tee -a /root/harden.log
+        echo
+        echo
+        echo    "Fixing this problem!"
+
+        echo
+cat <<EOT >> /etc/rsyslog.conf
+\$FileCreateMode 0640
+EOT
+        echo
+        echo    "Problem fixed!"
+        echo
+else
+        echo
+        echo    "Correct rsyslog permissions are already set"
+        echo
+fi
+
+#P-23 Ensuring rsyslog sends logs to remote host 
+
+        echo
+        echo    "Backing up original rsyslog.conf to rsyslog.conf.bkp"
+        echo
+                cp -f /etc/rsyslog.conf /etc/rsyslog.conf.bkp
+        echo
+        echo    "Backup of rsyslog config complete"
+        echo
+        echo
+        echo    "Setting rsyslog to send all logs to syslog appliance"
+        echo
+        sed -i '/*.* @@remote-host:514/s/^#//g' /etc/rsyslog.conf
+        sed -i -e "s/*.* @@remote-host:514/*.* @@$rsyslogip/g" /etc/rsyslog.conf
+        echo
+        echo    "Set rsyslog to send all logs to syslog appliance"
+        echo
+
+#P-24 Ensure rsyslog or syslog-ng is installed
+
+echo "Checking rsyslog or syslog-ng is installed or not..."
+if [[ `rpm -qa rsyslog` ]]; then
+        echo "rsyslog is already installed"
+else
+        echo "rsyslog is not installed.. installing.." | tee -a /root/harden.log
+        yum -y install rsyslog
+        echo
+fi
+
+#P-25 Ensuring all log files have the right permissions
+        echo    "Ensuring that all log files have the right permissions set.. otherwise, setting them now"
+        echo
+	`find /var/log -type f -exec chmod g-wx,o-rwx {} +`
+	echo
+	echo	"This has been done!"
+	echo
+echo "install usb-storage /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install sr_mod /bin/true"  >> /etc/modprobe.d/CIS.conf
+chown root:root /boot/grub2/grub.cfg 
+chmod og-rwx /boot/grub2/grub.cfg
+sed 's/max_log_file = 8 /max_log_file = 500/g' /etc/audit/auditd.conf
+#sed 's/admin_space_left_action = SUSPEND /admin_space_left_action = ROTATE/g' /etc/audit/auditd.conf
+#sed 's/space_left_action = SYSLOG /space_left_action = ROTATE/g' /etc/audit/auditd.conf
+systemctl enable auditd
+
+
+# Q. Secure Boot Settings
+
+#Q-1 Ensure permissions on bootloader config are configured
+
+echo
+echo "Checking permissions on bootloader config..."
+echo
+chown root:root /boot/grub2/grub.cfg | tee -a /root/harden.log
+chmod og-rwx /boot/grub2/grub.cfg    | tee -a /root/harden.log
+echo
+
+
+# Setting PAM password-auth policy
+
+#         echo
+#         echo    "Backing up /etc/pam.d/password-auth to /etc/pam.d/password-auth.bkp"
+#         echo
+#         cp -f /etc/pam.d/password-auth /etc/pam.d/password-auth.bkp
+#         echo    
+#         echo    "Backup of password-auth complete!"
+#         echo    
+#         echo
+#         echo    "Making sure PAM password-auth has correct policy set"
+#         echo
+#         echo
+#         echo    "Setting PAM password-auth policy correctly"
+#         echo  
+#         sed -i -e 's/pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=/pam_pwquality.so try_first_pass retry=3/g' /etc/pam.d/password-auth
+#         echo    
+#         echo    "PAM password-auth policy set correctly!"
+#         echo
+
+# #!/bin/bash
+# # Setting PAM system-auth policy
+
+#         echo
+#         echo    "Backing up /etc/pam.d/system-auth to /etc/pam.d/system-auth.bkp"
+#         echo
+#         cp -f /etc/pam.d/system-auth /etc/pam.d/system-auth.bkp
+#         echo    
+#         echo    "Backup of system-auth complete!"
+#         echo    
+#         echo
+#         echo    "Making sure PAM system-auth has correct policy set"
+#         echo
+#         echo
+#         echo    "Setting PAM password-auth policy correctly"
+#         echo  
+#         sed -i -e 's/pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=/pam_pwquality.so try_first_pass retry=3/g' /etc/pam.d/system-auth
+#         echo    
+#         echo    "PAM system-auth policy set correctly!"
+#         echo
+
+sleep 5
+sysctl -w net.ipv4.conf.all.accept_redirects=0
+sysctl -w net.ipv4.conf.default.accept_redirects=0
+sysctl -w net.ipv6.conf.all.accept_redirects=0
+sysctl -w net.ipv6.conf.default.accept_redirects=0
+sysctl -w net.ipv4.route.flush=1
+sysctl -w net.ipv6.route.flush=1
+sysctl -w net.ipv4.conf.all.secure_redirects=0
+sysctl -w net.ipv4.conf.default.secure_redirects=0
+sysctl -w net.ipv4.route.flush=1
+sysctl -w net.ipv4.conf.all.log_martians=1
+sysctl -w net.ipv4.conf.default.log_martians=1
+sysctl -w net.ipv4.route.flush=1
+sysctl -w net.ipv6.conf.all.accept_ra=0
+sysctl -w net.ipv6.conf.default.accept_ra=0
+sysctl -w net.ipv6.route.flush=1
+#chmod o-w /tmp/udagent.result
+echo "install vfat /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install freevxfs /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install cramfs /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install jffs2 /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install hfs /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install udf /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install hfsplus /bin/true" >> /etc/modprobe.d/CIS.conf
+echo "install squashfs /bin/true" >> /etc/modprobe.d/CIS.conf
+sed -i 's/max_log_file = 8/max_log_file = 500/g' /etc/audit/auditd.conf
+sed -i 's/admin_space_left_action = SUSPEND/admin_space_left_action = ROTATE/g' /etc/audit/auditd.conf
+echo
+echo "HARDENING COMPLETE"
+echo
+
+

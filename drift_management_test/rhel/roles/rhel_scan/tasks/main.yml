@@ -1,0 +1,1258 @@
+---
+- name: Create csv file for each host
+  set_fact:
+    host_csv_file: "/tmp/{{ inventory_hostname }}.csv"
+    NA: 'NA'
+
+- name: Remove host CSV file if it exists
+  file:
+    path: "{{ host_csv_file }}"
+    state: absent
+
+- name: Create host CSV file
+  file:
+    path: "{{ host_csv_file }}"
+    state: touch
+
+- name: Create heading for host CSV file
+  shell: "echo Hostname,IPAddress,Date,Baseline,Compliance > {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-1 Seal and store built-in local root account in PAPM system' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-2 Disable or remove all unnecessary accounts from the system' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-3 Ensure system accounts are non-login' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Ensure default group for the root account is GID 0
+  shell: 'grep "^root:" /etc/passwd | cut -f4 -d:'
+  register: A4
+- name: Confiure dummy variable
+  set_fact:
+    dummy: {"0"}
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    A4_results: "{{ 'Yes' if A4.stdout | int == dummy | int else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-4 Ensure default group for the root account is GID 0' }},{{ A4_results }} >> {{ host_csv_file }}"
+
+- name: Ensure default user umask is 027 or more restrictive
+  shell: 'grep "^umask" /etc/profile'
+  register: A5
+  ignore_errors: yes
+- name: Confiure dummy variable
+  set_fact:
+    dummy: {"umask 027"}
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    A5_results: "{{ 'Yes' if A5.stdout | string == 'umask 027' | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-5 Ensure default user umask is 027 or more restrictive' }},{{ A5_results }} >> {{ host_csv_file }}"
+  
+
+- name: Ensure default user shell timeout is 900 seconds or less
+  shell: 'grep "TMOUT=900" /etc/profile'
+  register: A6
+  ignore_errors: yes
+- name: Confiure dummy variable
+  set_fact:
+    dummy: {'TMOUT=900'}
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    A6_results: "{{ 'Yes' if A6.stdout | string == 'TMOUT=900' | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-6 Ensure default user shell timeout is 900 seconds or less' }},{{ A6_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure access to the su command is restricted
+  shell: 'grep "pam_wheel.so use_uid" /etc/pam.d/su'
+  register: A7
+- name: Confiure dummy variable
+  set_fact:
+    dummy: { '' }
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    A7_results: "{{ 'Yes' if A7.stdout | string != dummy | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'A-7 Ensure access to the su command is restricted' }},{{ A7_results }} >> {{ host_csv_file }}"
+
+- name: "Include vars from section-{{ section_num }}_data.yml"
+  include_vars:
+    file: "roles/rhel_scan/defaults/section-{{ section_num }}_data.yml" 
+
+- name: Run the audit of the sections
+  include_tasks: audit_loop.yml
+  loop: "{{ range(0, hardening_baseline | length) | list }}"
+  loop_control:
+    loop_var: hardening_baseline_item
+ 
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'B-7 Ensure all users last password change date is in the past' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+  
+- name: Set lockout duration to 30 minutes
+  shell: 'sudo grep pam_faillock.so /etc/pam.d/system-auth /etc/pam.d/password-auth'
+  register: C1
+- name: Confiure dummy variable
+  set_fact:
+    dummy: ''
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    C1_results: "{{ 'Yes' if C1.stdout | string != dummy | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'C-1 Set lockout duration to 30 minutes' }},{{ C1_results }} >> {{ host_csv_file }}"
+
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/passwd -perm 644
+  register: D4
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    dummy: ""
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    D4_results: "{{ 'Yes' if D4.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-4 Ensure permissions on /etc/passwd are configured' }},{{ D4_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/shadow are configureds
+  shell: find /etc/shadow -perm 000
+  register: D5
+- name: Check compliance for Ensure permissions on /etc/shadow are configured
+  set_fact:
+    D5_results: "{{ 'Yes' if D5.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-5 Ensure permissions on /etc/shadow are configured' }},{{ D5_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/shadow are configureds
+  shell: find /etc/group -perm 644
+  register: D6
+- name: Check compliance for Ensure permissions on /etc/group are configured
+  set_fact:
+    D6_results: "{{ 'Yes' if D6.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-6 Ensure permissions on /etc/group are configured' }},{{ D6_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/gshadow are configureds
+  shell: find /etc/gshadow -perm 000
+  register: D7
+- name: Check compliance for Ensure permissions on /etc/gshadow are configured
+  set_fact:
+    D7_results: "{{ 'Yes' if D7.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-7 Ensure permissions on /etc/gshadow are configured' }},{{ D7_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/passwd- -perm 644
+  register: D8
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    D8_results: "{{ 'Yes' if D8.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-8 Ensure permissions on /etc/passwd are configured' }},{{ D8_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/shadow- are configureds
+  shell: find /etc/shadow- -perm 000
+  register: D9
+- name: Check compliance for Ensure permissions on /etc/shadow are configured
+  set_fact:
+    D9_results: "{{ 'Yes' if D9.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-9 Ensure permissions on /etc/shadow are configured' }},{{ D9_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/shadow are configureds
+  shell: find /etc/group- -perm 644
+  register: D10
+- name: Check compliance for Ensure permissions on /etc/group are configured
+  set_fact:
+    D10_results: "{{ 'Yes' if D10.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-10 Ensure permissions on /etc/group- are configured' }},{{ D10_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/gshadow are configureds
+  shell: find /etc/gshadow- -perm 000
+  register: D11
+- name: Check compliance for Ensure permissions on /etc/gshadow are configured
+  set_fact:
+    D11_results: "{{ 'Yes' if D11.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-11 Ensure permissions on /etc/gshadow- are configured' }},{{ D11_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no world writable files exist
+  shell: sudo df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+  register: D12
+  ignore_errors: yes
+- name: Ensure no world writable files exist
+  set_fact:
+    unworld: ""
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    unworld_results: "{{ 'Yes' if D12.stdout == unworld else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-12 Ensure no world writable files exist' }},{{ unworld_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no unowned files or directories exist
+  shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser
+  register: D13
+  ignore_errors: yes
+- name: Ensure no unowned files or directories exists
+  set_fact:
+    unowned: ""
+- name: Check compliance for Ensure no unowned files or directories exist
+  set_fact:
+    unowned_results: "{{ 'Yes' if D13.stdout == unowned else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-13 Ensure no unowned files or directories exist' }},{{ unowned_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no ungrouped files or directories exist
+  shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup
+  register: D14
+  ignore_errors: yes
+- name: Ensure no ungrouped files or directories exist
+  set_fact:
+    D14_test: ""
+- name: Check compliance for Ensure no ungrouped files or directories exist
+  set_fact:
+    D14_results: "{{ 'Yes' if D14.stdout == D14_test else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-14 Ensure no ungrouped files or directories exist' }},{{ D14_results }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-15 Audit SUID executables- Only Applicable to appliance' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-16 Audit SGID executables- Only Applicable to appliance' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'D-17 Perform audit system file permissions to confirm that package system files and directories are maintained with the permissions they were intended to have' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-16 Ensure nodev option set on removable media partitions' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-17 Ensure nosuid option set on removable media partitions' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-18 Ensure noexec option set on removable media partitions' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+  
+- name: Ensure sticky bit is set on all world-writable directories
+  shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null
+  register: E19
+  ignore_errors: yes
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    dummy: ""
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    E19_results: "{{ 'Yes' if E19.stdout == dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-19 Ensure sticky bit is set on all world-writable directories' }},{{ E19_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure sticky bit is set on all world-writable directories
+  shell: systemctl list-unit-files --state=disabled -all | grep autofs
+  register: E20
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    dummy: ""
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    E20_results: "{{ 'Yes' if E20.stdout | string == 'sssd-autofs.socket                      disabled' | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-20 Disable Automounting' }},{{ E20_results }} >> {{ host_csv_file }}"
+
+- name: Ensure sticky bit is set on all world-writable directories
+  shell: sudo crontab -u root -l | grep aide
+  register: E22
+  ignore_errors: yes
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    dummy: ""
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    E22_results: "{{ 'Yes' if E22.stdout | string == '0 5 * * * /usr/bin/aide --check' | string else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'E-22 Ensure filesystem integrity is regularly checked' }},{{ E22_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on /etc/hosts.allow are configured
+  shell: find /etc/hosts.allow -perm 644
+  register: F17
+- name: Check compliance for Ensure permissions on /etc/shadow are configured
+  set_fact:
+    F17_results: "{{ 'Yes' if F17.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'F-17 Ensure permissions on /etc/hosts.allow are configured' }},{{ F17_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure permissions on /etc/hosts.deny are configured
+  shell: find /etc/hosts.deny -perm 644
+  register: F18
+- name: Check compliance for Ensure permissions on /etc/shadow are configured
+  set_fact:
+    F18_results: "{{ 'Yes' if F18.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'F-18 Ensure permissions on /etc/hosts.allow are configured' }},{{ F18_results }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'F-24 Ensure default deny firewall policy' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'F-27 Ensure permissions on /etc/hosts.allow are configured' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/crontab  -perm 600
+  register: J2
+- name: Ensure permissions on /etc/crontab are configured
+  set_fact:
+    dummy: ""
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J2_results: "{{ 'Yes' if J2.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-2 Ensure permissions on /etc/crontab are configured' }},{{ J2_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.hourly  -perm 700
+  register: J3
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J3_results: "{{ 'Yes' if J3.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-3 Ensure permissions on /etc/cron.hourly are configured' }},{{ J3_results }} >> {{ host_csv_file }}"
+ 
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.daily  -perm 700
+  register: J4
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J4_results: "{{ 'Yes' if J4.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-4 Ensure permissions on /etc/cron.daily are configured' }},{{ J4_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.weekly  -perm 700
+  register: J5
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J5_results: "{{ 'Yes' if J5.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-5 Ensure permissions on /etc/cron.weekly are configured' }},{{ J5_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.monthly  -perm 700
+  register: J6
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J6_results: "{{ 'Yes' if J6.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-6 Ensure permissions on /etc/cron.monthly are configured' }},{{ J6_results }} >> {{ host_csv_file }}"
+  
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.d  -perm 700
+  register: J7
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J7_results: "{{ 'Yes' if J7.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-7 Ensure permissions on /etc/cron.d are configured' }},{{ J7_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/cron.allow  -perm 600
+  register: J8
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    J8_results: "{{ 'Yes' if J8.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'J-8 Ensure at/cron is restricted to authorized users' }},{{ J8_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/ssh/sshd_config  -perm 600
+  register: K1
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    K1_results: "{{ 'Yes' if K1.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'K-1 Ensure permissions on /etc/ssh/sshd_config  are configured' }},{{ K1_results }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'K-14 Ensure SSH access is limited' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+  
+- name: Ensure password fields are not empty
+  shell: 'cat /etc/shadow | awk -F: "($2 == "" ) { print $1 " does not have a password "}"'
+  register: L1
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    L1_results: "{{ 'Yes' if L1.stdout == dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-1 Ensure password fields are not empty' }},{{ L1_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no legacy + entries exist in /etc/passwd
+  shell: grep "^+:" /etc/passwd
+  register: L2
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    L2_results: "{{ 'Yes' if L2.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-2 Ensure no legacy + entries exist in /etc/passwd' }},{{ L2_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no legacy + entries exist in /etc/shadow 
+  shell: grep "^+:" /etc/shadow
+  register: L3
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    L3_results: "{{ 'Yes' if L3.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-3 Ensure no legacy + entries exist in /etc/shadow' }},{{ L3_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no legacy + entries exist in /etc/group
+  shell: grep "^+:" /etc/group
+  register: L4
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    L4_results: "{{ 'Yes' if L4.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-4 Ensure no legacy + entries exist in /etc/group' }},{{ L4_results }} >> {{ host_csv_file }}"
+
+- name: Ensure root is the only UID 0 account
+  shell: 'cat /etc/passwd | awk -F: "($3 == 0) { print $1 }"'
+  register: L5
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    L5_results: "{{ 'Yes' if L5.stdout == 'root' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-5 Ensure root is the only UID 0 account' }},{{ L4_results }} >> {{ host_csv_file }}"
+
+- name: Ensure root PATH Integrity
+  script: "../RHEL/roles/rhel_scan/files/L6.sh"
+  register: L6
+- name: Confiure dummy variable
+  set_fact:
+    dummy: {"0"}
+- name: Check compliance for root PATH Integrity
+  set_fact:
+    L6_results: "{{ 'Yes' if L6.rc != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-6 Ensure root PATH Integrity' }},{{ L6_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure all users home directories exist
+  script: "../RHEL/roles/rhel_scan/files/L7.sh"
+  register: L7
+  ignore_errors: yes
+- name: Check compliance for users home directories exist
+  set_fact:
+    L7_results: "{{ 'Yes' if L7.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-7 Ensure all users home directories exist' }},{{ L7_results }} >> {{ host_csv_file }}"
+  
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-8 Ensure users home directories permissions are 750 or more restrictive' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Ensure users own their home directories
+  script: "../RHEL/roles/rhel_scan/files/L9.sh"
+  register: L9
+  ignore_errors: yes
+- name: Check compliance for users own their home directories
+  set_fact:
+    L9_results: "{{ 'Yes' if L9.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L-9 Ensure users own their home directories' }},{{ L9_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure users dot files are not group or world writable
+  script: "../RHEL/roles/rhel_scan/files/L10.sh"
+  register: L10
+  ignore_errors: yes
+- name: Check compliance for users dot files are not group or world writable
+  set_fact:
+    L10_results: "{{ 'Yes' if L10.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L10- Ensure users dot files are not group or world writable' }},{{ L10_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no users have .forward files
+  script: "../RHEL/roles/rhel_scan/files/L11.sh"
+  register: L11
+  ignore_errors: yes
+- name: Check compliance for no users have .forward files
+  set_fact:
+    L11_results: "{{ 'Yes' if L11.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L11- Ensure  no users have .forward files' }},{{ L11_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no users have .netrc files
+  script: "../RHEL/roles/rhel_scan/files/L12.sh"
+  register: L12
+  ignore_errors: yes
+- name: Check compliance for no users have .netrc files
+  set_fact:
+    L12_results: "{{ 'Yes' if L12.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L12- Ensure no users have .netrc files' }},{{ L12_results }} >> {{ host_csv_file }}"
+
+- name: Ensure users .netrc Files are not group or world accessible
+  script: "../RHEL/roles/rhel_scan/files/L13.sh"
+  register: L13
+  ignore_errors: yes
+- name: Check compliance for users .netrc Files are not group or world accessible
+  set_fact:
+    L13_results: "{{ 'Yes' if L13.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L13- Ensure users .netrc Files are not group or world accessible' }},{{ L13_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no users have .rhosts files
+  script: "../RHEL/roles/rhel_scan/files/L14.sh"
+  register: L14
+  ignore_errors: yes
+- name: Check compliance for no users have .rhosts files
+  set_fact:
+    L14_results: "{{ 'Yes' if L14.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L14- Ensure no users have .rhosts files' }},{{ L14_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure all groups in /etc/passwd exist in /etc/group
+  script: "../RHEL/roles/rhel_scan/files/L15.sh"
+  register: L15
+  ignore_errors: yes
+- name: Check compliance for all groups in /etc/passwd exist in /etc/group
+  set_fact:
+    L15_results: "{{ 'Yes' if L15.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L15- Ensure all groups in /etc/passwd exist in /etc/group' }},{{ L15_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no duplicate UIDs exist
+  script: "../RHEL/roles/rhel_scan/files/L16.sh"
+  register: L16
+  ignore_errors: yes
+- name: Check compliance for no duplicate UIDs exist
+  set_fact:
+    L16_results: "{{ 'Yes' if L16.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L16- Ensure no duplicate UIDs exist' }},{{ L16_results }} >> {{ host_csv_file }}"  
+  
+- name: Ensure no duplicate GIDs exist
+  script: "../RHEL/roles/rhel_scan/files/L17.sh"
+  register: L17
+  ignore_errors: yes
+- name: Check compliance for no duplicate GIDs exist
+  set_fact:
+    L17_results: "{{ 'Yes' if L17.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L17- Ensure no duplicate GIDs exist' }},{{ L17_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure no duplicate user names exist
+  script: "../RHEL/roles/rhel_scan/files/L18.sh"
+  register: L18
+  ignore_errors: yes
+- name: Check compliance for no duplicate user names exist
+  set_fact:
+    L18_results: "{{ 'Yes' if L18.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L18- Ensure no duplicate user names exist' }},{{ L18_results }} >> {{ host_csv_file }}"
+
+- name: Ensure no duplicate group names exist
+  script: "../RHEL/roles/rhel_scan/files/L19.sh"
+  register: L19
+  ignore_errors: yes
+- name: Check compliance for no duplicate group names exist
+  set_fact:
+    L19_results: "{{ 'Yes' if L19.rc != '0' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'L19- Ensure no duplicate group names exist' }},{{ L19_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/motd  -perm 644
+  register: M4
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    M4_results: "{{ 'Yes' if M4.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'M-4 Ensure permissions on /etc/motd are configured' }},{{ M4_results }} >> {{ host_csv_file }}"
+
+- name: Change file ownership, group and permissions
+  shell: find /etc/issue  -perm 644
+  register: M5
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    M5_results: "{{ 'Yes' if M5.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'M-5 Ensure permissions on /etc/issue are configured' }},{{ M5_results }} >> {{ host_csv_file }}"
+  
+- name: Change file ownership, group and permissions
+  shell: find /etc/issue.net  -perm 644
+  register: M6
+- name: Check compliance for 'Account Lockout' section
+  set_fact:
+    M6_results: "{{ 'Yes' if M6.stdout != dummy else 'No' }}"
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'M-6 Ensure permissions on /etc/issue.net are configured' }},{{ M6_results }} >> {{ host_csv_file }}"
+  
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'N-1 Install antivirus software and run automatically in the background' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+  
+- name: Ensure chargen services are not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep chargen-dgram
+  register: O1
+  ignore_errors: yes
+- name: Confiure dummy variable
+  set_fact:
+    dummy: ""
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O1_results: "{{ 'Yes' if O1.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-1 Ensure chargen services are not enabled' }},{{ O1_results }} >> {{ host_csv_file }}"
+
+- name: Ensure daytime services are not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep daytime-dgram
+  register: O2
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O2_results: "{{ 'Yes' if O2.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-2 Ensure daytime services are not enabled' }},{{ O2_results }} >> {{ host_csv_file }}"
+
+- name: Ensure discard services are not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep discard-dgram
+  register: O3
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O3_results: "{{ 'Yes' if O3.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-3 Ensure discard services are not enabled' }},{{ O3_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure echo services are not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep echo-dgram
+  register: O4
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O4_results: "{{ 'Yes' if O4.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-4 Ensure echo services are not enabled' }},{{ O4_results }} >> {{ host_csv_file }}"
+
+- name: Ensure time services are not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep time-dgram
+  register: O5
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O5_results: "{{ 'Yes' if O5.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-5 Ensure time services are not enabled' }},{{ O5_results }} >> {{ host_csv_file }}"
+
+- name: Ensure tftp server is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep tftp
+  register: O6
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O6_results: "{{ 'Yes' if O6.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-6 Ensure tftp server is not enabled' }},{{ O6_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring xinetd is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep xinetd
+  register: O7
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O7_results: "{{ 'Yes' if O7.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-7 Ensure tftp server is not enabled' }},{{ O7_results }} >> {{ host_csv_file }}"
+
+- name: Ensure X Window System is not installed
+  shell: systemctl list-unit-files --state=enabled -all | grep xserver-xorg*
+  register: O8
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O8_results: "{{ 'Yes' if O8.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-8 Ensure X Window System is not installed' }},{{ O8_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring avahi-daemon itself is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep avahi-daemon
+  register: O9
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O9_results: "{{ 'Yes' if O9.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-9 Ensuring avahi-daemon itself is disabled if present' }},{{ O9_results }} >> {{ host_csv_file }}"
+
+
+- name: Ensuring CUPS is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep cups
+  register: O10
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O10_results: "{{ 'Yes' if O10.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-10 Ensuring CUPS is not enabled' }},{{ O10_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring dhpcd itself is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep dhcpd
+  register: O11
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O11_results: "{{ 'Yes' if O11.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-11 Ensuring dhpcd itself is disabled if present' }},{{ O11_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that LDAP itself is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep slapd
+  register: O12
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O12_results: "{{ 'Yes' if O12.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-12 Ensuring that LDAP itself is disabled if present' }},{{ O12_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that NFS and RPC itself are disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep nfs-server
+  register: O13
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O13_results: "{{ 'Yes' if O13.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-13 Ensuring that NFS and RPC itself are disabled if present' }},{{ O13_results }} >> {{ host_csv_file }}"  
+
+- name: Ensuring DNS server is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep named
+  register: O14
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O14_results: "{{ 'Yes' if O14.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-14 Ensuring DNS server is not enabled' }},{{ O14_results }} >> {{ host_csv_file }}"  
+ 
+- name: Ensuring that FTP is disable
+  shell: systemctl list-unit-files --state=enabled -all | grep vsftpd
+  register: O15
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O15_results: "{{ 'Yes' if O15.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-15 Ensuring that FTP is disable' }},{{ O15_results }} >> {{ host_csv_file }}"
+ 
+- name: Ensure HTTP server is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep httpd
+  register: O16
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O16_results: "{{ 'Yes' if O16.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-16 Ensure HTTP server is not enabled' }},{{ O16_results }} >> {{ host_csv_file }}"
+  
+ 
+- name: Ensure IMAP and POP3 server is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep dovecot
+  register: O17
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O17_results: "{{ 'Yes' if O17.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-17 Ensure IMAP and POP3 server is not enabled' }},{{ O17_results }} >> {{ host_csv_file }}"
+  
+ 
+- name: Ensuring that samba is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep smb
+  register: O18
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O18_results: "{{ 'Yes' if O18.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-18 Ensuring that samba is disabled if present' }},{{ O18_results }} >> {{ host_csv_file }}"
+  
+- name: Ensure HTTP Proxy Server is not enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep squid
+  register: O19
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O19_results: "{{ 'Yes' if O19.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-19 Ensure HTTP Proxy Server is not enabled' }},{{ O19_results }} >> {{ host_csv_file }}"
+
+- name: Ensure mail transfer agent is configured for local-only mode
+  shell: 'netstat -an | grep LIST | grep ":25[[:space:]]"'
+  register: O20
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O20_results: "{{ 'Yes' if O20.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-20 Ensure mail transfer agent is configured for local-only mode' }},{{ O20_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that NIS is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep vpserv
+  register: O21
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O21_results: "{{ 'Yes' if O21.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-21 Ensure mail transfer agent is configured for local-only mode' }},{{ O21_results }} >> {{ host_csv_file }}"
+  
+- name: Ensuring that rsh and its subservices are completely disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep rsh.socket
+  register: O22
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O22_results: "{{ 'Yes' if O22.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-22 Ensuring that rsh and its subservices are completely disabled if present' }},{{ O22_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that telnet.socket service is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep telnet.socket
+  register: O23
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O23_results: "{{ 'Yes' if O23.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-23 Ensuring that telnet.socket service is disabled if present' }},{{ O23_results }} >> {{ host_csv_file }}"
+  
+- name: Ensuring that tftp.socket service different from xinetd tftp is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep tftp.socket
+  register: O24
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O24_results: "{{ 'Yes' if O24.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-24 Ensuring that tftp.socket service different from xinetd tftp is disabled if present' }},{{ O24_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that rsyncd service is disabled if present
+  shell: systemctl list-unit-files --state=enabled -all | grep rsyncd
+  register: O25
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O25_results: "{{ 'Yes' if O25.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-25 Ensuring that rsyncd service is disabled if present' }},{{ O25_results }} >> {{ host_csv_file }}"
+
+- name: Ensure talk server is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep ntalk
+  register: O26
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O26_results: "{{ 'Yes' if O26.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-26 Ensure talk server is disabled' }},{{ O26_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring ypbind NIS client is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep ypbind
+  register: O27
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O27_results: "{{ 'Yes' if O27.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-27 Ensuring ypbind NIS client is disabled' }},{{ O27_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring rsh client is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep ros
+  register: O28
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O28_results: "{{ 'Yes' if O28.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-28 Ensuring rsh client is disabled' }},{{ O28_results }} >> {{ host_csv_file }}"
+
+- name: Ensure talk client is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep talk
+  register: O29
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O29_results: "{{ 'Yes' if O29.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-29 Ensure talk client is disabled' }},{{ O29_results }} >> {{ host_csv_file }}"
+
+- name: Ensure telnet client is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep telnet
+  register: O30
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O30_results: "{{ 'Yes' if O30.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-30 Ensure telnet client is disabled' }},{{ O30_results }} >> {{ host_csv_file }}"
+
+- name: Ensure ldap client is disabled
+  shell: systemctl list-unit-files --state=enabled -all | grep openldap-clients
+  register: O31
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    O31_results: "{{ 'Yes' if O31.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'O-31 Ensure ldap client is disabled' }},{{ O31_results }} >> {{ host_csv_file }}"
+
+- name: Ensure audit log storage size is configured
+  shell: grep "max_log_file" /etc/audit/auditd.conf
+  register: P1
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P1_results: "{{ 'Yes' if P1.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-1 Ensure audit log storage size is configured' }},{{ P1_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring auditd service is enabled
+  shell: systemctl list-unit-files --state=enabled -all | grep auditd
+  register: P2
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P2_results: "{{ 'Yes' if P2.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-2 Ensuring auditd service is enabled' }},{{ P2_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring that services that start before auditd starts are also audited
+  shell: grep "audit=1" /boot/grub2/grub.cfg
+  register: P3
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P3_results: "{{ 'Yes' if P3.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-3 Ensuring that services that start before auditd starts are also audited' }},{{ P3_results }} >> {{ host_csv_file }}"
+  
+- name: Ensuring events that modify date and time are collected
+  shell: grep time-change /etc/audit/audit.rules
+  register: P4
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P4_results: "{{ 'Yes' if P4.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-4 Ensuring events that modify date and time are collected' }},{{ P4_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring events that modify user/group information are collected
+  shell: grep identity /etc/audit/audit.rules
+  register: P5
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P5_results: "{{ 'Yes' if P5.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-5 Ensuring events that modify user/group information are collected' }},{{ P5_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring events that modify network environment are collected
+  shell: grep system-locale /etc/audit/audit.rules
+  register: P6
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P6_results: "{{ 'Yes' if P6.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-6 Ensuring events that modify network environment are collected' }},{{ P6_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring events that modify the Mandatory Access Control selinux of the system are collected
+  shell: grep MAC-policy /etc/audit/audit.rules
+  register: P7
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P7_results: "{{ 'Yes' if P7.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-7 Ensuring events that modify the Mandatory Access Control selinux of the system are collected' }},{{ P7_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring login and logout events are collected
+  shell: grep logins /etc/audit/audit.rules
+  register: P8
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P8_results: "{{ 'Yes' if P8.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-8 Ensuring login and logout events are collected' }},{{ P8_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring session initiation information is collected
+  shell: grep session /etc/audit/audit.rules
+  register: P9
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P9_results: "{{ 'Yes' if P9.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-9 Ensuring session initiation information is collected' }},{{ P9_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring disc acl permission modification events are collected
+  shell: grep perm_mod /etc/audit/audit.rules
+  register: P10
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P10_results: "{{ 'Yes' if P10.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-10 Ensuring disc acl permission modification events are collected' }},{{ P10_results }} >> {{ host_csv_file }}"
+
+
+- name: Ensuring unsuccessful unauthorized file access events are collected
+  shell: grep access /etc/audit/audit.rules
+  register: P11
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P11_results: "{{ 'Yes' if P11.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-11 Ensuring unsuccessful unauthorized file access events are collected' }},{{ P11_results }} >> {{ host_csv_file }}"
+
+- name: Ensure use of privileged commands is collected
+  shell: grep time-change /etc/audit/audit.rules
+  register: P12
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P12_results: "{{ 'Yes' if P12.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-12 Ensure use of privileged commands is collected' }},{{ P12_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring mount events are collected
+  shell: grep mounts /etc/audit/audit.rules
+  register: P13
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P13_results: "{{ 'Yes' if P13.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-13 Ensuring mount events are collected' }},{{ P13_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring file deletion events by users are collected
+  shell: grep delete /etc/audit/audit.rules
+  register: P14
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P14_results: "{{ 'Yes' if P14.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-14 Ensuring file deletion events by users are collected' }},{{ P14_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring changes to sudoers are collected
+  shell: grep scope /etc/audit/audit.rules
+  register: P15
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P15_results: "{{ 'Yes' if P15.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-15 Ensuring changes to sudoers are collected' }},{{ P15_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring sysadmin actions sudolog are collected
+  shell: grep actions /etc/audit/audit.rules
+  register: P16
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P16_results: "{{ 'Yes' if P16.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-16 Ensuring sysadmin actions sudolog are collected' }},{{ P16_results }} >> {{ host_csv_file }}"
+  
+- name: Ensuring kernel module loading and unloading events are collected
+  shell: grep modules /etc/audit/audit.rules
+  register: P17
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P17_results: "{{ 'Yes' if P17.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-17 Ensuring kernel module loading and unloading events are collected' }},{{ P17_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring audit configuration is immutable
+  shell: grep "^\s*[^#]" /etc/audit/audit.rules | tail -1
+  register: P18
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P18_results: "{{ 'Yes' if P18.stdout == '-e 2' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-18 Ensuring audit configuration is immutable' }},{{ P18_results }} >> {{ host_csv_file }}"
+
+
+- name: Ensuring audit configuration is immutable
+  shell: systemctl list-unit-files --state=enabled -all | grep rsyslog
+  register: P19
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P19_results: "{{ 'Yes' if P18.stdout != '-rsyslog.service                 enabled' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-19 Ensuring audit configuration is immutable' }},{{ P19_results }} >> {{ host_csv_file }}"
+  
+- name: Ensuring audit configuration is immutable
+  shell: ls -l /var/log/
+  register: P20
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P20_results: "{{ 'Yes' if P18.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-20 Ensuring audit configuration is immutable' }},{{ P20_results }} >> {{ host_csv_file }}"
+
+- name: Ensuring correct rsyslog permissions are set
+  shell: grep "^\$FileCreateMode" /etc/rsyslog.conf
+  register: P21
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P21_results: "{{ 'Yes' if P21.stdout == '$FileCreateMode 0640' else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-21 Ensuring correct rsyslog permissions are set' }},{{ P21_results }} >> {{ host_csv_file }}"
+
+- name: Ensure rsyslog is configured to send logs to a remote log host
+  shell: 'grep "^*.*[^I][^I]*@" /etc/rsyslog.conf'
+  register: P22
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P22_results: "{{ 'Yes' if P22.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-22 Ensure rsyslog is configured to send logs to a remote log host' }},{{ P22_results }} >> {{ host_csv_file }}"
+
+- name: Ensure remote rsyslog messages are only accepted on designated log hosts
+  shell: grep "$ModLoad imtcp.so" /etc/rsyslog.conf
+  register: P23
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P23_results: "{{ 'Yes' if P23.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-23 Ensure remote rsyslog messages are only accepted on designated log hosts' }},{{ P23_results }} >> {{ host_csv_file }}"
+
+- name: Ensure rsyslog or syslog-ng is installed
+  shell: rpm -q rsyslog
+  register: P24
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P24_results: "{{ 'Yes' if P24.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-24 Ensure rsyslog or syslog-ng is installed' }},{{ P24_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on all logfiles are configured
+  shell: find /var/log -type f -ls
+  register: P25
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P25_results: "{{ 'Yes' if P25.stdout == dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-25 Ensure permissions on all logfiles are configured' }},{{ P25_results }} >> {{ host_csv_file }}"
+
+- name: Ensure logrotate is configured 
+  shell: grep "rotate" /etc/logrotate.conf
+  register: P26
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    P26_results: "{{ 'Yes' if P26.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'P-26 Ensure logrotate is configured' }},{{ P26_results }} >> {{ host_csv_file }}"
+
+- name: Ensure permissions on bootloader config are configured
+  shell: find /boot/grub2/grub.cfg -perm 600
+  register: Q1
+  ignore_errors: yes
+- name: Check compliance for Ensure no world writable files exist
+  set_fact:
+    Q1_results: "{{ 'Yes' if Q1.stdout != dummy else 'No' }}"
+  ignore_errors: yes
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'Q-1 Ensure permissions on bootloader config are configured' }},{{ Q1_results }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'Q-2 Ensure bootloader password is set' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"
+
+- name: Insert entry into csv file
+  shell: "echo {{ ansible_hostname }},{{ ansible_default_ipv4.address }},{{ ansible_date_time.date }},{{ 'Q-3 Ensure authentication required for single user mode' }},{{ 'Not Applicable' }} >> {{ host_csv_file }}"

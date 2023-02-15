@@ -1,0 +1,8 @@
+---
+- name: remediation task
+  include_tasks: rhel-remediation.yml
+  when: "'yes' in remediation_select"
+  
+- name: remediation task
+  include_tasks: rhel-scan.yml
+  when: "'no' in remediation_select"

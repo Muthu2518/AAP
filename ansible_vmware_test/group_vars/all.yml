@@ -1,0 +1,7 @@
+---
+vcenter_server:   nxtvcenter.nxtsandbox.local
+vcenter_username: administrator@vsphere.local
+vcenter_password: Aspirenxt@12299
+datacenter_name:  KL-Datacenter
+cluster_name:     NXT-Cluster
+win_template:     win-server-2019

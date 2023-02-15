@@ -1,0 +1,6 @@
+---
+- name: Windows Server Pinging
+  hosts: windows
+  tasks:
+    - name:  Ansible to windows server connection test
+      ansible.windows.win_ping::
