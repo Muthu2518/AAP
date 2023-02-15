@@ -1,4 +1,6 @@
 ---
+- hosts: windows
+  gather_facts: true
 - name: Retrieve Hardening Requirements
   include_vars:
     file: defaults/windows_server_hardening_requirements.yml
