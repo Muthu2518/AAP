@@ -707,12 +707,12 @@
     - ['O-28 Workstation', "{{ hardening_requirements.windows_hardening.system_services.workstation.value }}", "{{ workstation }}", "{{ workstation_results }}"]
   delegate_to: localhost 
   
-  #tasks:
-  #- name: converting to html
-  #  template:
-  #    src: ./report.html.j2
-  #    dest: /opt/{{ ansible_facts['hostname'] }}.html
-  #  delegate_to: localhost
+- tasks:
+  # name: converting to html
+    template:
+      src: ./report.html.j2
+      dest: /opt/{{ ansible_facts['hostname'] }}.html
+    delegate_to: localhost
 - name: Copying report to target machine
   copy:
     src: /opt/{{ ansible_facts['hostname'] }}.html
