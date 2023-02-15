@@ -835,13 +835,13 @@
     themes_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.themes.raw_value | int == themes.value | int else 'No' }}"
     windows_audio_results: "{{ 'Yes' if hardening_requirements.windows_hardening.system_services_disabled.windows_audio.raw_value | int == windows_audio.value | int else 'No' }}"  
   ignore_errors: yes 
-
-- name: converting to html
-    template:
-      src: ./report.html.j2
-      dest: /opt/{{ ansible_facts['hostname'] }}.html
-    delegate_to: localhost
-- name: Copying report to target machine
-    copy:
-      src: /opt/{{ ansible_facts['hostname'] }}.html
-      dest: \\192.168.1.116\tmp
+  tasks:
+    - name: converting to html
+        template:
+          src: ./report.html.j2
+          dest: /opt/{{ ansible_facts['hostname'] }}.html
+        delegate_to: localhost
+    - name: Copying report to target machine
+        copy:
+          src: /opt/{{ ansible_facts['hostname'] }}.html
+          dest: \\192.168.1.116\tmp
